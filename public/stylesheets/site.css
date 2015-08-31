@@ -1,0 +1,209 @@
+body {
+    padding-top: 42px;
+    padding-bottom: 30px;
+}
+
+.divider {
+    border-top: 1px solid #ccc;
+    margin: 1.6em 0;
+    text-align: center;
+    height: 0;
+    font-size: 1.125rem;
+    font-family: Lato-Bold;
+}
+
+.divider span {
+    position: relative;
+    top: -.5em;
+    padding: 0 1em;
+    background: #4e5d6c;
+    font-weight: bold;
+    font-family: Lato;
+}
+
+.btn.facebook {
+    background: #3b5998;
+    text-decoration: none;
+    color: white;
+    padding: .8rem 1.6rem .6rem 1.6rem;
+}
+
+h1.page-title {
+    margin-bottom: 30px;
+}
+
+.card .card-content {
+    /*padding-top:3em;*/
+    background-color: #3a63ad;
+    height: 130px;
+    max-height: 130px;
+    overflow: hidden;
+}
+.card a {
+    text-decoration: none;
+    color: white;
+    font-family: Lato;
+}
+.card .card-title {
+    font-family: Lato-Regular;
+    line-height: 1.3em;
+}
+/*.card .panel-body {*/
+    /*position: absolute;*/
+    /*bottom: 15px;*/
+/*}*/
+.card .card-buttons {
+    /*padding-top:15px;*/
+}
+.card .card-footer {
+    /*border-top: 1px solid #999;*/
+    background-color: #3a63ad;
+}
+
+.card-new .card-content {
+    height: 130px;
+    max-height: 130px;
+    background-color: #323c46;
+}
+.card-new .card-content span.glyphicon-plus {
+    margin-top: 10px;
+    color: #4E5D6C;
+    transition: color 0.5s ease;
+}
+.card-new .card-content:hover span.glyphicon-plus {
+    color: #EBEBEB;
+}
+#new-card-modal a.color {
+    display: block;
+    color: #3A63AD;
+    width: 80px;
+    height: 80px;
+}
+#new-card-modal div.colors div {
+    float: left;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    background-color:#3A63AD;
+    height:50px;
+    width:70px;
+    cursor: pointer;
+}
+#new-card-modal div.colors div.active {
+    border: 8px solid rgba(0,0,0,.7);
+}
+
+.card-1 .card-content {
+    background-color: #9b7e61;
+}
+
+.card-1 .card-footer {
+    background-color: #9b7e61;
+}
+
+.card-2 .card-content {
+    background-color: #46c66d;
+}
+
+.card-2 .card-footer {
+    background-color: #46c66d;
+}
+
+/* dc9fbb */
+
+.card-3 .card-content {
+    color: #333;
+    background-color: #dc9fbb;
+}
+
+.card-3 .card-footer {
+    background-color: #dc9fbb;
+}
+
+.card-big .card-content {
+    height: 100%;
+    max-height: 100%;
+}
+
+/* OPTIONS Style */
+.option a {
+    font-size: 1.5em;
+    border-radius: 15px;
+}
+
+.option a.disabled {
+    display:inline-block;
+    padding:8px 16px;
+    margin: 1px;
+}
+
+.option li {
+    line-height: 23px;
+}
+
+.option li span {
+    margin-right: 8px;
+}
+
+.option .card-img-holder {
+    position: relative;
+    padding-bottom: 70%;
+    background-color: rgba(0,0,0,.1);
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 5px 5px 0 0;
+    overflow: hidden;
+    cursor: zoom-in;
+}
+
+.upload-img-holder {
+    position: relative;
+    max-width:200px;
+    padding-bottom: 50%;
+    background-color: rgba(0,0,0,.1);
+    background-position: top center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 2px;
+    overflow: hidden;
+    cursor: zoom-in;
+}
+
+#option-new-model form input[type=file] {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    font-family: Arial;
+    font-size: 118px;
+    margin: 0px;
+    padding: 0px;
+    cursor: pointer;
+    opacity: 0;
+}
+
+
+/* PARTICIPANTS Style */
+/*.participants {*/
+    /*height: 600px;*/
+    /*max-height: 100%;*/
+/*}*/
+.participants a {
+    color: white;
+    text-decoration: none;
+    transition: color 0.5s ease;
+}
+
+.participants .active a {
+    color: #df691a;
+}
+
+.participants a:hover {
+    color: #f0ad4e;
+}
+
+/* Responsive Code */
+@media (max-width: 510px) {
+    .card .card-buttons {
+        padding-top:15px;
+    }
+}

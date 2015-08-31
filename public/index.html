@@ -2,12 +2,167 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Decideme.life | Social Decision Making</title>
+    <title>Decide.me | Social Decision</title>
+
+    <link rel="shortcut icon" href="images/favicon.png"/>
+
+    <link rel="stylesheet" href="stylesheets/bootstrap.min.css"/>
+    <link rel="stylesheet" href="stylesheets/superhero-bootstrap.css"/>
+    <link rel="stylesheet" href="stylesheets/magnific-popup.css"/>
+    <link rel="stylesheet" href="stylesheets/site.css"/>
+    <link rel="stylesheet" href="stylesheets/customfileupload.css"/>
+
+    <script data-main="javascripts/start" src="javascripts/libs/require.js"></script>
 </head>
 <body>
 
-
 <script src="javascripts/libs/jquery-2.1.4.min.js"></script>
+<script>
+    $(function () {
+
+        var buttonFacebookLogin = $('#buttonFacebookLogin');
+        var facebookLoginText = buttonFacebookLogin.find('#facebookLoginText');
+
+        // This is called with the results from from FB.getLoginStatus().
+        function statusChangeCallback(response) {
+            console.log('statusChangeCallback');
+            console.log(response);
+
+            if (response.status === 'connected') {
+                // similar behavior as an HTTP redirect
+//            window.location.replace("/decideme/site/app.html");
+                facebookLoginText.text('Log out');
+                buttonFacebookLogin.data('state', 'connected');
+//
+//                // Logged into your app and Facebook.
+//                testAPI();
+            } else if (response.status === 'not_authorized') {
+                // The person is logged into Facebook, but not your app.
+//                document.getElementById('status').innerHTML = 'Please log ' +
+//                        'into this app.';
+
+                buttonFacebookLogin.find('#facebookLoginText').text('Continue with Facebook');
+                buttonFacebookLogin.data('state', 'not_authorized');
+            } else {
+                // The person is not logged into Facebook, so we're not sure if
+                // they are logged into this app or not.
+                document.getElementById('status').innerHTML = 'Please log ' +
+                        'into Facebook.';
+                facebookLoginText.text('Continue with Facebook');
+                buttonFacebookLogin.data('state', 'unknown');
+            }
+        }
+
+        // This function is called when someone finishes with the Login
+        // Button.  See the onlogin handler attached to it in the sample
+        // code below.
+        function checkLoginState() {
+            FB.getLoginStatus(function(response) {
+                statusChangeCallback(response);
+            });
+        }
+
+        window.fbAsyncInit = function() {
+            FB.init({
+                appId      : '1470146513286993',
+                xfbml      : true,
+                version    : 'v2.4'
+            });
+
+            // Now that we've initialized the JavaScript SDK, we call
+            // FB.getLoginStatus().  This function gets the state of the
+            // person visiting this page and can return one of three states to
+            // the callback you provide.  They can be:
+            //
+            // 1. Logged into your app ('connected')
+            // 2. Logged into Facebook, but not your app ('not_authorized')
+            // 3. Not logged into Facebook and can't tell if they are logged into
+            //    your app or not.
+            //
+            // These three cases are handled in the callback function.
+
+            FB.getLoginStatus(function(response) {
+                statusChangeCallback(response);
+            });
+
+        };
+
+        // Load the SDK asynchronously
+        (function(d, s, id){
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) {return;}
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+
+        // Here we run a very simple test of the Graph API after login is
+        // successful.  See statusChangeCallback() for when this call is made.
+        function testAPI() {
+            console.log('Welcome!  Fetching your information.... ');
+            FB.api('/me', function(response) {
+                console.log(response);
+                console.log('Successful login for: ' + response.name);
+                document.getElementById('status').innerHTML =
+                        "You're logged in as , " + response.name + '!';
+            });
+        }
+
+        buttonFacebookLogin.on('click', function (e) {
+            e.preventDefault();
+
+            var state = $(this).data('state');
+            if ( state == "not_authorized" || state == "unknown" ) {
+                FB.login(function(response){
+                    statusChangeCallback(response);
+                }, {scope: 'public_profile,email'});
+            } else if ( state == "connected" ) {
+//                FB.logout(function (response) {
+//                    statusChangeCallback(response);
+//                });
+                FB.api("/me/permissions", "delete", function(response){
+                    statusChangeCallback(response);
+                });
+            }
+
+        });
+
+    });
+</script>
+
+<nav class="navbar navbar-default navbar-fixed-top">
+</nav>
+
+<div id="page">
+</div>
+
+<!-- Disqus Script -->
+<!--<script type="text/javascript">-->
+<!--/* * * CONFIGURATION VARIABLES * * */-->
+<!--var disqus_shortname = 'decidedotme';-->
+
+<!--/* * * DON'T EDIT BELOW THIS LINE * * */-->
+<!--(function() {-->
+<!--var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;-->
+<!--dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';-->
+<!--(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);-->
+<!--})();-->
+<!--</script>-->
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = 'decidedotme';
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+</script>
+
+<script src="javascripts/libs/bootstrap.min.js"></script>
 
 </body>
 </html>

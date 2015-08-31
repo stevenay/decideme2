@@ -1,0 +1,98 @@
+input[type="file"] {
+    margin-left: 2em;
+}
+input[type="file"]#inputUploadImage {
+    /* Note: display:none on the input won't trigger the click event in WebKit.
+       Setting visibility to hidden and width 0 works.*/
+    visibility: hidden;
+    width: 0;
+    height: 0;
+}
+#buttonUploadImage {
+    color: #08233e;
+    font-size: 12pt;
+    padding: 12px;
+    margin-bottom: 5px;
+    background: -webkit-gradient(linear, left top, left bottom,
+    color-stop(0.5, rgba(255,255,255,0.3)), color-stop(0.5, #ffcc00), to(#ffcc00));
+    background: -webkit-linear-gradient(top, rgba(255,255,255,0.3) 50%, #ffcc00 50%, #ffcc00);
+    background: -moz-linear-gradient(top, rgba(255,255,255,0.3) 50%, #ffcc00 50%, #ffcc00);
+    background: -ms-linear-gradient(top, rgba(255,255,255,0.3) 50%, #ffcc00 50%, #ffcc00);
+    background: -o-linear-gradient(top, rgba(255,255,255,0.3) 50%, #ffcc00 50%, #ffcc00);
+    background: linear-gradient(top, rgba(255,255,255,0.3) 50%, #ffcc00 50%, #ffcc00);
+    background-color: #ffcc00;
+    border: 1px solid #ffcc00;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -o-border-radius: 10px;
+    -ms-border-radius: 10px;
+    border-radius: 10px;
+    border-bottom: 1px solid #9f9f9f;
+    -moz-box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
+    -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
+    -o-box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
+    -ms-box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
+    cursor: pointer;
+    text-shadow: 0 1px #fff;
+}
+#buttonUploadImage:hover {
+    background: -webkit-gradient(linear, left top, left bottom,
+    color-stop(0, #fff), color-stop(0.7, #ffcc00),
+    to(#ffcc00));
+    background: -webkit-linear-gradient(top, #fff, #ffcc00 70%, #ffcc00);
+    background: -moz-linear-gradient(top, #fff, #ffcc00 70%, #ffcc00);
+    background: -o-linear-gradient(top, #fff, #ffcc00 70%, #ffcc00);
+    background: -ms-linear-gradient(top, #fff, #ffcc00 70%, #ffcc00);
+    background: linear-gradient(top, #fff, #ffcc00 70%, #ffcc00);
+}
+#buttonUploadImage:active {
+    position: relative;
+    top: 2px;
+}
+.button {
+    width: 132px;
+    height: 27px;
+}
+.button::-webkit-file-upload-button {
+    visibility: hidden;
+}
+.button:before {
+    content: 'Select some files';
+    display: inline-block;
+    background: -webkit-gradient(linear, 0% 40%, 0% 70%, from(#F9F9F9), to(#E3E3E3));
+    background: -webkit-linear-gradient(top, #F9F9F9, #E3E3E3);
+    background: -moz-linear-gradient(top, #F9F9F9, #E3E3E3);
+    background: -ms-linear-gradient(top, #F9F9F9, #E3E3E3);
+    background: -o-linear-gradient(top, #F9F9F9, #E3E3E3);
+    background: linear-gradient(top, #F9F9F9, #E3E3E3);
+    border: 1px solid #999;
+    border-radius: 3px;
+    padding: 5px 8px;
+    outline: none;
+    white-space: nowrap;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    cursor: pointer;
+    text-shadow: 1px 1px #fff;
+    font-weight: 700;
+    font-size: 10pt;
+}
+.button:hover:before {
+    border-color: black;
+}
+.button:active:before {
+    background: -webkit-gradient(linear, 0% 40%, 0% 70%, from(#E3E3E3), to(#F9F9F9));
+    background: -webkit-linear-gradient(top, #E3E3E3, #F9F9F9);
+    background: -moz-linear-gradient(top, #E3E3E3, #F9F9F9);
+    background: -ms-linear-gradient(top, #E3E3E3, #F9F9F9);
+    background: -o-linear-gradient(top, #E3E3E3, #F9F9F9);
+    background: linear-gradient(top, #E3E3E3, #F9F9F9);
+}
+img#uploadImage {
+    width: 130px;
+    height: 240px;
+}

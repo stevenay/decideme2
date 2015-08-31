@@ -1,0 +1,75 @@
+<!-- Modal Popup -->
+<div class="modal" id="login-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">Login</h4>
+            </div>
+            <div class="modal-body">
+                <div class="text-center connectWithFacebookButton">
+                    <p class="fbAccountAlreadyExists hidden">This email address is already registered on Planza. You can <a class="login" href="/login">login here</a>.</p>
+                    <div class="loginWithFacebook">
+                        <a href="#" id="buttonFacebookLogin" class="btn facebook registerWithFacebookButton"> <img src="images/line-fb.png" width="40" height="40" alt=""/> <span id="facebookLoginText">Continue with Facebook</span></a>
+                        <br/>
+                        <br/>
+                        <p class="legal leader">We never post to your wall or message friends without permission</p>
+                    </div>
+                </div>
+                <div class="divider">
+                    <span>Or</span>
+                </div>
+                <form class="form-horizontal">
+                    <fieldset>
+                        <div class="form-group">
+                            <label for="inputEmail" class="col-lg-2 control-label">Email</label>
+                            <div class="col-lg-10">
+                                <input type="text" class="form-control" id="inputEmail" placeholder="Email">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword" class="col-lg-2 control-label">Password</label>
+                            <div class="col-lg-10">
+                                <input type="password" class="form-control" id="inputPassword" placeholder="Password">
+                            </div>
+                        </div>
+
+                        <div class="form-group pull-right" style="margin-right:0px;">
+                            <div>
+                                <button type="reset" class="btn btn-default">Cancel</button>
+                                <button type="submit" id="btnLogIn" class="btn btn-primary">LogIn</button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <p class="text-center text-info small">By creating an account you agree to our Terms and conditions</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="jumbotron">
+    <div class="container text-center">
+        <h1>Make Social Decision</h1>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A aperiam aspernatur cupiditate, dolore doloribus
+            eos error, excepturi incidunt ipsa maxime minus nihil officiis quas sint unde! Aut hic molestias voluptas.</p>
+        <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more »</a></p>
+        <!--<div-->
+        <!--class="fb-like"-->
+        <!--data-share="true"-->
+        <!--data-width="450"-->
+        <!--data-show-faces="true">-->
+        <!--</div>-->
+        <!--<fb:login-button scope="public_profile,email" onlogin="checkLoginState();">-->
+        <!--</fb:login-button>-->
+        <!--<div class="fb-login-button" data-max-rows="1" data-size="large" data-show-faces="false" data-auto-logout-link="true"></div>-->
+        <div id="status">
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div id="disqus_thread"></div>
+</div>

@@ -1,0 +1,136 @@
+<!-- Modal Popup -->
+<div class="modal" id="new-card-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">New Card</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <fieldset>
+                        <div class="form-group">
+                            <label for="inputEmail" class="col-lg-2 control-label">Question</label>
+                            <div class="col-lg-10">
+                                <input type="text" class="form-control" id="inputEmail" placeholder="Question">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword" class="col-lg-2 control-label">Explanation (optional)</label>
+                            <div class="col-lg-10">
+                                <input type="text" class="form-control" id="inputPassword" placeholder="Explanation (optional)">
+                            </div>
+                        </div>
+                        <div class="form-group" >
+                            <label for="inputPassword" class="col-lg-2 control-label">Color</label>
+
+                            <div class="col-lg-10 colors">
+                                <div data-attr="blue" class="active">&nbsp;</div>
+                                <div data-attr="gray" style="background-color: #616870;">&nbsp;</div>
+                                <div data-attr="blue" style="background-color: #00b4cc;">&nbsp;</div>
+                                <div data-attr="green" style="background-color: #46C66D;">&nbsp;</div>
+                                <div data-attr="yellow" style="background-color: #f7e05f;">&nbsp;</div>
+                                <div data-attr="purple" style="background-color: #B564B5;">&nbsp;</div>
+                                <div data-attr="brown" style="background-color: #9B7E61;">&nbsp;</div>
+                                <div data-attr="lightgray" style="background-color: #aabbcc;">&nbsp;</div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div class="form-group pull-right" style="margin-right:0px;">
+                    <div>
+                        <button type="reset" class="btn btn-default">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Create</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="page-title">Your Decision Cards</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 col-sm-5 card-new">
+            <a href="#new-card-modal" data-toggle="modal">
+                <div class="panel panel-primary card-content">
+                    <div class="panel-body">
+                        <h1 class="text-center"><span class="glyphicon glyphicon-plus"></span></h1>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4 col-sm-5 card">
+            <a href="#">
+                <div class="panel panel-primary card-content">
+                    <div class="panel-body">
+                        <h4 class="card-title">Home or Away Content, Which Jersey Best?</h4>
+                        <small>3 Participants</small>
+                        <span class="label label-default pull-right" style="background-color:#2d5294;">Decided</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4 col-sm-5 card card-3">
+            <a href="#">
+                <div class="panel panel-primary card-content">
+                    <div class="panel-body">
+                        <h4 class="card-title">
+                            ဆန်းဒေးဘယ်မှာ တ​ွေ့ကြမလဲ?
+                        </h4>
+                        <small>5 Participants</small>
+                        <span class="label label-default pull-right" style="background-color:#bf86a1;">Still Deciding</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4 col-sm-5 card card-1">
+            <a href="#">
+                <div class="panel panel-primary card-content">
+                    <div class="panel-body">
+                        <h4 class="card-title">
+                            ဘယ်စာအုပ်ဖတ်ရင်ကောင်းမလဲ
+                        </h4>
+                        <small>4 participants</small>
+                        <span class="label label-default pull-right" style="background-color:#8c7458;">Starting</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4 col-sm-5 card card-2">
+            <a href="#">
+                <div class="panel panel-primary card-content">
+                    <div class="panel-body">
+                        <h4 class="card-title">
+                            ဘယ်ရုပ်ရှင်ကောင်းလဲ
+                        </h4>
+                        <small>15 participants</small>
+                        <span class="label label-default pull-right" style="background-color:#32ae58;">Negelected</span>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <div class="row">
+
+    </div>
+</div>
+
+<script>
+    $( '#new-card-modal div.colors' ).children( 'div' ).each( function( i, el ) {
+        var element = $(el);
+        element.on('click', function() {
+            element.addClass('active');
+            element.siblings().removeClass('active');
+        });
+    });
+</script>
+
+
+
