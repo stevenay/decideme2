@@ -45,15 +45,20 @@ passport.deserializeUser(memberModel.deserializeUser());
 
 passport.use(new RememberMeStrategy(
     function(token, done) {
-        consumeRememberMeToken(token, function (err, user) {
+        rememberMeModel.consumeToken(token, function (err, userId) {
             if (err) { return done(err); }
-            if (!user) { return done(null, false); }
-            return done(null, user);
+            if (!userId) { return done(null, false); }
+
+            memberModel.findOne({'_id': userId}, function(err, member) {
+                if (err) { return done(err); }
+                if (!member) { return done(null, false); }
+                return done(null, member);
+            });
         });
     },
     function(user, done) {
         var token = utils.randomString(64);
-        saveRememberMeToken(token, { userId: user._id }, function(err) {
+        rememberMeModel.saveToken(token, user._id, function(err) {
             if (err) { return done(err); }
             return done(null, token);
         });
@@ -65,23 +70,13 @@ function consumeRememberMeToken(token, fn) {
     rememberMeModel.findOneAndRemove({ 'token': token }, function (err, rememberMeToken) {
         if (err) return err;
 
+        if (!rememberMeToken) { return fn(err, null); }
+
         memberModel.findOne({'_id': rememberMeToken.userId}, function(err, member) {
             return fn(null, member);
         });
     });
 
-};
-
-function saveRememberMeToken(token, user, fn) {
-    var newToken = new rememberMeModel({
-        userId: user.userId,
-        token: token
-    });
-
-    newToken.save(function (err, token) {
-        if (err) return console.error(err);
-        return fn();
-    });
 };
 
 // mongoose

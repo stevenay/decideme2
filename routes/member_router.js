@@ -1,11 +1,12 @@
 var express = require('express');
 
-var memberRouter = function(Member, RememberMeToken) {
+var memberRouter = function(Member, rememberMeModel) {
 
     var router = express.Router();
     var passport = require('passport');
     var utils = require('../utils');
 
+    // Register new member
     router.post('/', function(req, res) {
         Member.register(new Member({
                 email: req.body.email,
@@ -22,6 +23,7 @@ var memberRouter = function(Member, RememberMeToken) {
             });
     });
 
+    // Login member
     router.post('/login', function(req, res, next) {
         passport.authenticate('local', function(err, user, info) {
             if (err) { return next(err); }
@@ -42,31 +44,14 @@ var memberRouter = function(Member, RememberMeToken) {
         return res.status(200).send("Successful login");
     });
 
-    function issueToken(user, done) {
-        var token = utils.randomString(64);
-        saveRememberMeToken(token, { userId: user._id }, function(err) {
-            if (err) { return done(err); }
-            return done(null, token);
-        });
-    }
-
-    function saveRememberMeToken(token, user, fn) {
-        var newToken = new RememberMeToken({
-            userId: user.userId,
-            token: token
+    // Check member authentication
+    router.get('/check-authentication',
+        ensureAuthenticated,
+        function(req, res) {
+            res.status(200).send("Authorized");
         });
 
-        newToken.save(function (err, token) {
-            if (err) return console.error(err);
-            return fn(err);
-        });
-    }
-
-    function ensureAuthenticated(req, res, next) {
-        if (req.isAuthenticated()) { return next(); }
-        res.status(401).send('Unauthorized access');
-    };
-
+    // Get particular member
     router.get('/:memberId',
         ensureAuthenticated,
         function(req, res) {
@@ -82,6 +67,7 @@ var memberRouter = function(Member, RememberMeToken) {
             });
         });
 
+    // Get all members
     router.get('/',
         function(req, res) {
             var query = req.query;
@@ -96,6 +82,20 @@ var memberRouter = function(Member, RememberMeToken) {
                 }
             });
         });
+
+
+    function issueToken(user, done) {
+        var token = utils.randomString(64);
+        rememberMeModel.saveToken(token, user._id, function(err) {
+            if (err) { return done(err); }
+            return done(null, token);
+        });
+    };
+
+    function ensureAuthenticated(req, res, next) {
+        if (req.isAuthenticated()) { return next(); }
+        res.status(401).send('Unauthorized access');
+    };
 
     return router;
 }
