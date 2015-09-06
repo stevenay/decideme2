@@ -12,12 +12,16 @@ var utils = require('./utils');
 
 var routes = require('./routes/index');
 var memberRouter = require('./routes/member_router');
+var cardRouter = require('./routes/card_router');
+var themeRouter = require('./routes/theme_router');
 
 var app = express();
 
 // Creating models
 var memberModel = require('./mongo-models/member_model');
 var rememberMeModel = require('./mongo-models/remember-me-token_model');
+var cardModel = require('./mongo-models/card_model');
+var themeModel = require('./mongo-models/theme_model');
 
 //uncomment after placing your favicon in /public
 app.use(favicon(path.join(__dirname, 'public', 'favicon.png')));
@@ -37,6 +41,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
 app.use('/api/members', memberRouter(memberModel, rememberMeModel));
+app.use('/api/cards', cardRouter(cardModel));
+app.use('/api/themes', themeRouter(themeModel));
 
 // passport config
 passport.use(memberModel.createStrategy());
@@ -65,19 +71,19 @@ passport.use(new RememberMeStrategy(
     }
 ));
 
-function consumeRememberMeToken(token, fn) {
-
-    rememberMeModel.findOneAndRemove({ 'token': token }, function (err, rememberMeToken) {
-        if (err) return err;
-
-        if (!rememberMeToken) { return fn(err, null); }
-
-        memberModel.findOne({'_id': rememberMeToken.userId}, function(err, member) {
-            return fn(null, member);
-        });
-    });
-
-};
+//function consumeRememberMeToken(token, fn) {
+//
+//    rememberMeModel.findOneAndRemove({ 'token': token }, function (err, rememberMeToken) {
+//        if (err) return err;
+//
+//        if (!rememberMeToken) { return fn(err, null); }
+//
+//        memberModel.findOne({'_id': rememberMeToken.userId}, function(err, member) {
+//            return fn(null, member);
+//        });
+//    });
+//
+//};
 
 // mongoose
 mongoose.connect('mongodb://localhost/decideme2');

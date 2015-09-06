@@ -2,7 +2,7 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'text!templates/menu.template.html'
+    'text!templates/member_menu.template.html'
 ], function($, _, Backbone, homeMenuTemplate) {
 
     var HomeMenuView = Backbone.View.extend({

@@ -2,27 +2,18 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'views/menu/homemenu.view',
     'text!templates/home.template.html'
-], function($, _, Backbone, HomeMenuView, homeTemplate){
+], function($, _, Backbone, homeTemplate){
 
     var HomeView = Backbone.View.extend({
         el: $('#page'),
 
         events: {
-            "click #btnLogIn": 'logIn'
+            "click #btn-login": 'logIn'
         },
 
         render: function() {
-            var homeMenuView = new HomeMenuView();
-            homeMenuView.render();
-
             this.$el.html(homeTemplate);
-        },
-
-        renderMemberHome: function() {
-            //var homeMenuView = new HomeMenuView();
-            //homeMenuView.render();
         },
 
         logIn: function(e) {
@@ -32,15 +23,16 @@ define([
             var url = '/api/members/login';
             console.log('Loggin in... ');
             var formValues = {
-                email: $('#inputEmail').val(),
-                password: $('#inputPassword').val()
+                email: $('#input-email').val(),
+                password: $('#input-password').val()
             };
 
             $.ajax({
                 url:url,
                 type:'POST',
                 data: formValues,
-                success:function (data, textStatus, xhr) {
+                timeout: 5000,
+                success: function (data, textStatus, xhr) {
                     console.log(["Login request details: ", data]);
 
                     if(data.error) {  // If there is an error, show the error messages
@@ -48,11 +40,18 @@ define([
                     }
 
                     if (xhr.status == 200) {
-                        that.$el.find('#login-modal').modal('hide')
-                        Backbone.history.navigate('board', {trigger: true});
+                        if (data.status == 'login_failed') {
+                            console.log("Email and Password do not match.");
+                        } else if (data.status == 'login_success') {
+                            that.$el.find('#login-modal').modal('hide')
+                            Backbone.history.navigate('board', {trigger: true});
+                        }
                     }
-                    else if (xhr.status == 401)
-                        console.log("Email and Password do not match.")
+                },
+                error: function (xhr, textStatus) {
+                    if (xhr.status == 401) {
+                        Backbone.history.navigate('home', {trigger: true});
+                    }
                 }
             });
         }

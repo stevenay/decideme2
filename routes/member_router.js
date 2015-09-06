@@ -1,6 +1,6 @@
 var express = require('express');
 
-var memberRouter = function(Member, rememberMeModel) {
+var memberRouter = function(memberModel, rememberMeModel) {
 
     var router = express.Router();
     var passport = require('passport');
@@ -8,7 +8,7 @@ var memberRouter = function(Member, rememberMeModel) {
 
     // Register new member
     router.post('/', function(req, res) {
-        Member.register(new Member({
+        memberModel.register(new Member({
                 email: req.body.email,
                 memberType: req.body.memberType,
                 registerDate: req.body.registerDate
@@ -27,7 +27,7 @@ var memberRouter = function(Member, rememberMeModel) {
     router.post('/login', function(req, res, next) {
         passport.authenticate('local', function(err, user, info) {
             if (err) { return next(err); }
-            if (!user) { console.log("Unsuccessful"); return res.status(401).send('Unsuccessful login'); }
+            if (!user) { return res.status(200).json({ status: 'login_fail' }); }
 
             req.logIn(user, function(err) {
                 if (err) { return next(err); }
@@ -41,21 +41,28 @@ var memberRouter = function(Member, rememberMeModel) {
             return next();
         });
     }, function(req, res, next) {
-        return res.status(200).send("Successful login");
+        return res.status(200).json({status: 'login_success'});
+    });
+
+    // Logout member
+    router.post('/logout', function(req, res) {
+        res.clearCookie('remember_me');
+        req.logout();
+        res.json({'status':'logout_success'});
     });
 
     // Check member authentication
     router.get('/check-authentication',
-        ensureAuthenticated,
+        utils.ensureAuthenticated,
         function(req, res) {
-            res.status(200).send("Authorized");
+            res.json({ status: 'authorized' });
         });
 
     // Get particular member
     router.get('/:memberId',
-        ensureAuthenticated,
+        utils.ensureAuthenticated,
         function(req, res) {
-            Member.findById(req.params.memberId, function(err, member) {
+            memberModel.findById(req.params.memberId, function(err, member) {
                 if (err) {
                     res.status(500);
                     res.send("has problems in searching member");
@@ -71,7 +78,7 @@ var memberRouter = function(Member, rememberMeModel) {
     router.get('/',
         function(req, res) {
             var query = req.query;
-            Member.find(query, function(err, members) {
+            memberModel.find(query, function(err, members) {
                 if (err) {
                     res.status(500);
                     res.send("has problems in searching members");
@@ -92,13 +99,7 @@ var memberRouter = function(Member, rememberMeModel) {
         });
     };
 
-    function ensureAuthenticated(req, res, next) {
-        if (req.isAuthenticated()) { return next(); }
-        res.status(401).send('Unauthorized access');
-    };
-
     return router;
 }
-
 
 module.exports = memberRouter;
