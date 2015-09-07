@@ -45,7 +45,7 @@ var memberRouter = function(memberModel, rememberMeModel) {
     });
 
     // Logout member
-    router.post('/logout', function(req, res) {
+    router.get('/logout', function(req, res) {
         res.clearCookie('remember_me');
         req.logout();
         res.json({'status':'logout_success'});

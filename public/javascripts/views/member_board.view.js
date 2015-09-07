@@ -8,7 +8,7 @@ define([
 ], function($, _, Backbone, CardView, CardCollection, memberBoardTemplate){
 
     var MemberBoardView = Backbone.View.extend({
-        el: $('#js-member-board-view'),
+        //el: $('#js-member-board-view'),
 
         initialize: function() {
             this.collection = new CardCollection();

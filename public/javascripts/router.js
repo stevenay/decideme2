@@ -7,7 +7,7 @@ define([
     'views/home.view',
     'views/menu/member_menu.view',
     'views/member_board.view'
-], function($, _, Backbone, Cookie, HomeMenuView, HomeView, MemberMenuView, MemberBoardView) {
+], function($, _, Backbone, Cookies, HomeMenuView, HomeView, MemberMenuView, MemberBoardView) {
 
     var AppRouter = Backbone.Router.extend({
         routes: {
@@ -16,25 +16,25 @@ define([
             'helloWorld/:num': 'sayHello',
             '*actions': 'defaultAction'
         },
-        requresAuth: ['helloWorld'],
+        notRequiresAuth: ['#home'],
         preventAccessWhenAuth : ['#login'],
         before: function (params, next) {
-            var isAuth = this.checkAuthentication();
             var path = Backbone.history.location.hash;
-            var needAuth = _.contains(this.requresAuth, path);
+            var notNeedAuth = _.contains(this.notRequiresAuth, path);
             var cancelAccess = _.contains(this.preventAccessWhenAuth, path);
 
-            if (needAuth && !isAuth){
-                Session.set('redirectFrom', path);
-                Backbone.history.navigate('login', { trigger : true });
-            } else if(isAuth && cancelAccess){
-                Backbone.history.navigate('', { trigger : true });
-            } else{
-                return next();
-            }
+            this.checkAuthentication(function (isAuth) {
+                if (!notNeedAuth && !isAuth) {
+                    Cookies.set('redirectFrom', path, {expires: 7});
+                    Backbone.history.navigate('home', {trigger: true});
+                } else if (cancelAccess && isAuth) {
+                    Backbone.history.navigate('board', {trigger: true});
+                } else {
+                    return next();
+                }
+            });
         },
-
-        checkAuthentication: function() {
+        checkAuthentication: function(cb) {
             var url = '/api/members/check-authentication';
             var auth = false;
             $.ajax({
@@ -58,10 +58,13 @@ define([
                     if (xhr.status == 401) {
                         auth = false;
                     }
+                },
+                complete: function() {
+                    console.log("Auth is " + auth);
+                    cb(auth);
+                    //return done(auth);
                 }
             });
-
-            return auth;
         },
 
         initialize: function() {},
@@ -107,7 +110,7 @@ define([
                 this.currentBodyView.close();
 
             this.currentBodyView = view;
-            this.currentBodyView.show(willShow);
+            $('#page').html(this.currentBodyView.show(willShow).el);
         }
     });
 
@@ -122,37 +125,14 @@ define([
             app_router.memberBoardView().remove();
         });
         app_router.on('route:landingPage', function() {
+            console.log("Home Reached");
             this.setMenuView(app_router.homeMenuView());
-            this.setBodyView(app_router.homeView());
+            this.setBodyView(new HomeView());
         });
         app_router.on('route:defaultAction', function() {
             console.log("Router initialized");
             console.log("Facebook Login Check Here");
-
-            var url = '/api/members/check-authentication';
-            $.ajax({
-                url: url,
-                type: 'get',
-                timeout: 5000,
-                success: function (data, textStatus, xhr) {
-                    if (data.error)  // If there is an error, show the error messages
-                        console.log(data.error.text);
-
-                    if (xhr.status == 200) {
-                        console.log(data);
-                        if (data.status == 'not_authorized') {
-                            Backbone.history.navigate('home', {trigger: true});
-                        } else if (data.status == 'authorized') {
-                            Backbone.history.navigate('board', {trigger: true});
-                        }
-                    }
-                },
-                error: function (xhr, textStatus) {
-                    if (xhr.status == 401) {
-                        Backbone.history.navigate('home', {trigger: true});
-                    }
-                }
-            });
+            Backbone.history.navigate('board', {trigger: true});
         });
         app_router.on('route:logout', function() {
             var url = '/api/members/logout';

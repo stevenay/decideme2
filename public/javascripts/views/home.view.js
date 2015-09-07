@@ -6,13 +6,14 @@ define([
 ], function($, _, Backbone, homeTemplate){
 
     var HomeView = Backbone.View.extend({
-        el: $('#page'),
+        //tagName: $('#landingPage'),
 
         events: {
             "click #btn-login": 'logIn'
         },
 
         render: function() {
+            console.log("Yeah, it rendered");
             this.$el.html(homeTemplate);
         },
 

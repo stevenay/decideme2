@@ -43,6 +43,8 @@ require([
         if (this.onShow) {
             this.onShow();
         }
+
+        return this;
     }
 
     // Backbone Router Extension
@@ -62,9 +64,6 @@ require([
 
         Backbone.history.route(route, function(fragment) {
             var args = router._extractParameters(route, fragment);
-
-            console.log(arguments);
-            console.log(router.beforeExceptRoutes);
 
             var next = function(){
                 callback && callback.apply(router, args);
