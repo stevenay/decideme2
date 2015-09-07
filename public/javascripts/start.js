@@ -4,7 +4,7 @@ require.config({
         backbone: 'libs/backbone-min',
         underscore: 'libs/underscore-min',
         templates: '../templates',
-        jqueryCookie: 'libs/js.cookie'
+        cookie: 'libs/js.cookie'
     },
     shim: {
         'libs/underscore/underscore': {

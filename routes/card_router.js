@@ -3,6 +3,7 @@ var mongoose = require('mongoose');
 
 var cardRouter = function(cardModel) {
     var router = express.Router();
+    var utils = require('../utils');
 
     // Register new card
     router.post('/', ensureAuthenticated, function(req, res) {
@@ -33,7 +34,7 @@ var cardRouter = function(cardModel) {
 
 
     // Get All Cards
-    router.get('/', ensureAuthenticated, function(req, res) {
+    router.get('/', utils.ensureAuthenticated, function(req, res) {
         var query = req.query;
         cardModel.find(query)
             .populate('participants')
@@ -48,11 +49,6 @@ var cardRouter = function(cardModel) {
                 }
         });
     });
-
-    function ensureAuthenticated(req, res, next) {
-        if (req.isAuthenticated()) { return next(); }
-        res.status(401).send('Unauthorized access');
-    };
 
     return router;
 }

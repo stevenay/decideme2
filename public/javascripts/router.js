@@ -2,7 +2,7 @@ define([
     'jquery',
     'underscore',
     'backbone',
-    'jqueryCookie',
+    'cookie',
     'views/menu/home_menu.view',
     'views/home.view',
     'views/menu/member_menu.view',
@@ -11,11 +11,13 @@ define([
 
     var AppRouter = Backbone.Router.extend({
         routes: {
-            'home': 'landingPage',
+            'home': 'landing',
             'board': 'memberBoard',
             'helloWorld/:num': 'sayHello',
+            'logout': 'logout',
             '*actions': 'defaultAction'
         },
+        isAuth: false,
         notRequiresAuth: ['#home'],
         preventAccessWhenAuth : ['#login'],
         before: function (params, next) {
@@ -23,9 +25,12 @@ define([
             var notNeedAuth = _.contains(this.notRequiresAuth, path);
             var cancelAccess = _.contains(this.preventAccessWhenAuth, path);
 
+            var that = this;
             this.checkAuthentication(function (isAuth) {
+                that.isAuth = isAuth;
+                console.log(that.isAuth);
                 if (!notNeedAuth && !isAuth) {
-                    Cookies.set('redirectFrom', path, {expires: 7});
+                    Cookies.set('redirectFromUnAuth', path, {expires: 1});
                     Backbone.history.navigate('home', {trigger: true});
                 } else if (cancelAccess && isAuth) {
                     Backbone.history.navigate('board', {trigger: true});
@@ -33,6 +38,13 @@ define([
                     return next();
                 }
             });
+        },
+        after: function (params, next) {
+            var path = Backbone.history.location.hash;
+            if (path == '#logout') {
+                this.isAuth = false;
+            }
+
         },
         checkAuthentication: function(cb) {
             var url = '/api/members/check-authentication';
@@ -60,7 +72,6 @@ define([
                     }
                 },
                 complete: function() {
-                    console.log("Auth is " + auth);
                     cb(auth);
                     //return done(auth);
                 }
@@ -122,11 +133,13 @@ define([
         });
         app_router.on('route:sayHello', function(someNum) {
             console.log("SayHello");
-            app_router.memberBoardView().remove();
         });
-        app_router.on('route:landingPage', function() {
-            console.log("Home Reached");
-            this.setMenuView(app_router.homeMenuView());
+        app_router.on('route:landing', function() {
+            if (this.isAuth) {
+                this.setMenuView(app_router.memberMenuView());
+            } else {
+                this.setMenuView(app_router.homeMenuView());
+            }
             this.setBodyView(new HomeView());
         });
         app_router.on('route:defaultAction', function() {

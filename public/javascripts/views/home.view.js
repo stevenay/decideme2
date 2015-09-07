@@ -2,8 +2,9 @@ define([
     'jquery',
     'underscore',
     'backbone',
+    'cookie',
     'text!templates/home.template.html'
-], function($, _, Backbone, homeTemplate){
+], function($, _, Backbone, Cookies, homeTemplate){
 
     var HomeView = Backbone.View.extend({
         //tagName: $('#landingPage'),
@@ -44,8 +45,15 @@ define([
                         if (data.status == 'login_failed') {
                             console.log("Email and Password do not match.");
                         } else if (data.status == 'login_success') {
-                            that.$el.find('#login-modal').modal('hide')
-                            Backbone.history.navigate('board', {trigger: true});
+                            that.$el.find('#login-modal').modal('hide');
+                            var redirectFrom = Cookies.get('redirectFromUnAuth');
+                            if (redirectFrom) {
+                                Cookies.remove('redirectFromUnAuth');
+                                Backbone.history.navigate(redirectFrom, {trigger: true});
+                            } else {
+                                Backbone.history.navigate('board', {trigger: true});
+                            }
+
                         }
                     }
                 },

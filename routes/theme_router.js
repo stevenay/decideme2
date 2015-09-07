@@ -15,6 +15,22 @@ var themeRouter = function(themeModel) {
         });
     });
 
+    router.get('/', ensureAuthenticated, function(req, res) {
+        var query = req.query;
+        cardModel.find(query)
+            .populate('participants')
+            .exec( function(err, cards) {
+                if (err) {
+                    res.status(500);
+                    res.send("has problems in searching cards");
+                } else if (cards) {
+                    res.json(cards);
+                } else {
+                    res.status(404).send("not found cards");
+                }
+            });
+    })
+
     return router;
 }
 
