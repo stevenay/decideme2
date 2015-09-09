@@ -73,6 +73,21 @@ define([
             this.$el.find('div.colors').append( themeView.render().el );
         },
 
+        renderTheme: function(theme) {
+            var themeId = theme.get('_id');
+            var themeName = theme.get('themeName');
+            var color = theme.get('mainColorCode');
+
+            var $color = $('<div class="color"\
+                            style="background:' + color + '"\
+                            data-theme-id="' + themeId + '"\
+                            data-color="' + themeName + '"></div>')
+                .appendTo($('div.colors'))
+
+            if (this.model.get('_id') == themeId)
+                $color.addClass('active');
+        },
+
         addCard: function(e) {
             e.preventDefault();
 

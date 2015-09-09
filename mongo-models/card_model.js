@@ -10,7 +10,18 @@ var Card = new Schema({
     owner: { type: Schema.Types.ObjectId, ref: 'members' },
     linkUrl: String,
     status: { type: String, default: 'processing' },
-    participants: [{ type:Schema.Types.ObjectId, ref: 'members' }]
+    participants: [{ type:Schema.Types.ObjectId, ref: 'members' }],
+    created_at: { type: Date },
+    updated_at: { type: Date }
+});
+
+Card.pre('save', function(next){
+    now = new Date();
+    this.updated_at = now;
+    if ( !this.created_at ) {
+        this.created_at = now;
+    }
+    next();
 });
 
 module.exports = mongoose.model('cards', Card);
