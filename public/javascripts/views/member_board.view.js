@@ -11,11 +11,11 @@ define([
 
     var MemberBoardView = Backbone.View.extend({
         //el: $('#js-member-board-view'),
+        tagName: 'span',
 
         initialize: function() {
             this.collection = new CardCollection();
             this.collection.fetch({reset: true});
-            console.log("It Initialize");
 
             this.themeCollection = new ThemeCollection();
             this.themeCollection.fetch({reset: true});
@@ -24,6 +24,7 @@ define([
             this.listenTo( this.collection, 'reset', this.render );
 
             this.listenTo( this.themeCollection, 'reset', this.renderThemes );
+            //this.themeCollection.on("change:selected", this.themeSelected , this);
         },
 
         events: {
@@ -43,6 +44,10 @@ define([
             //this.$el.hide();
             this.$el.html(memberBoardTemplate);
             this.renderAllCards();
+
+            //this.$newCardModal = this.$('#modal-new-card');
+            this.$modal = this.$('#modal-new-card');
+            this.$form = this.$modal.find('form');
         },
 
         renderAllCards: function() {
@@ -73,14 +78,31 @@ define([
 
             var formData = {};
 
-            $( '#modal-new-card form' ).children( 'input' ).each( function( i, el ) {
+            this.$form.find( 'input' ).each( function( i, el ) {
                 if ( $(el).val() != '' ) {
-
                     // el.id is the Javascript code
                     formData[ el.id ] = $(el).val();
-
                 }
                 $(el).val('');
+            });
+
+            var colorName = this.$form.find('.colors .active').data('color');
+            formData['theme'] = this.themeCollection.findWhere({themeName: colorName}).get('_id');
+
+            var $modal = this.$modal;
+            this.collection.create( formData, {
+                wait: true,    // waits for server to respond with 200 before adding newly created model to collection
+                success: function (resp) {
+                    console.log('success callback');
+                    console.log(resp);
+                    $modal.modal('hide');
+                },
+                error: function (err) {
+                    console.log('error callback');
+                    // this error message for dev only
+                    alert('There was an error. See console for details');
+                    console.log(err);
+                }
             });
         }
     });

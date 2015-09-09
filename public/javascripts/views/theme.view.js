@@ -1,26 +1,31 @@
 define([
     'jquery',
     'underscore',
-    'backbone',
-    'text!templates/theme.template.html'
-], function($, _, Backbone, themeTemplate) {
+    'backbone'
+], function($, _, Backbone) {
 
     var ThemeView = Backbone.View.extend({
         tagName: 'div',
-        className: '',
-        template: _.template(themeTemplate),
         events: {
             'click': 'selectTheme'
         },
 
         render: function () {
-            this.$el.html( this.template( this.model.toJSON() ) );
+            this.$el.html( "&nbsp;" );
             return this;
         },
 
         selectTheme: function () {
+            this.model.set('selected', true);
             this.$el.addClass('active');
             this.$el.siblings().removeClass('active');
+        },
+
+        attributes: function () {
+            return {
+                'data-color': this.model.get('themeName'),
+                'style': 'background-color:' + this.model.get('mainColorCode')
+            };
         }
     });
 

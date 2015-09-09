@@ -1,24 +1,23 @@
 var express = require('express');
 var mongoose = require('mongoose');
 
-var cardRouter = function(cardModel) {
-    var router = express.Router();
+var routes = function(cardModel) {
+    var cardRouter = express.Router();
     var utils = require('../utils');
 
     // Register new card
-    router.post('/', ensureAuthenticated, function(req, res) {
-        var castedParticipants = req.body.participants.map(function( participant ) {
-            return mongoose.Types.ObjectId(participant);
-        });
+    cardRouter.post('/', utils.ensureAuthenticated, function(req, res) {
+        //var castedParticipants = req.body.participants.map(function( participant ) {
+        //    return mongoose.Types.ObjectId(participant);
+        //});
 
         var card = new cardModel({
             question: req.body.question,
-            expiredDate: req.body.expiredDate,
             description: req.body.description,
             theme: req.body.themeId,
             owner: req.user._id,
-            linkUrl: req.body.linkUrl,
-            participants: castedParticipants
+            status: 'created',
+            linkUrl: 'auto generate from the Server'
         });
 
         console.log("it reached here");
@@ -29,12 +28,8 @@ var cardRouter = function(cardModel) {
         });
     });
 
-    // Update card info
-    router.put('/')
-
-
     // Get All Cards
-    router.get('/', utils.ensureAuthenticated, function(req, res) {
+    cardRouter.get('/', utils.ensureAuthenticated, function(req, res) {
         var query = req.query;
         cardModel.find(query)
             .populate('participants')
@@ -47,10 +42,47 @@ var cardRouter = function(cardModel) {
                 } else {
                     res.status(404).send("not found cards");
                 }
+            });
+    });
+
+    // middleware for Retrieving Card Object
+    cardRouter.use('/:cardId', function(req, res, next) {
+        Card.findById(req.params.cardId, function(err, card) {
+            if (err) {
+                res.status(500).send(err);
+            } else if (card) {
+                req.card = card;
+                next();
+            } else {
+                res.status(404).send("no card found");
+            }
         });
     });
 
-    return router;
+    // Update card info
+    cardRouter.put('/', utils.ensureAuthenticated, function (req, res) {
+        var castedParticipants = req.body.participants.map(function( participant ) {
+            return mongoose.Types.ObjectId(participant);
+        });
+
+        req.card.question = req.body.question;
+        req.card.expiredDate = req.body.expiredDate;
+        req.card.description = req.body.description;
+        req.card.theme = req.body.themeId;
+        req.card.owner = req.user._id;
+        req.card.linkUrl = req.body.linkUrl;
+        req.card.participants = castedParticipants;
+
+        req.card.save(function(err) {
+            if (err) {
+                res.status(500).send(err);
+            } else {
+                res.json(req.card);
+            }
+        });
+    });
+
+    return cardRouter;
 }
 
-module.exports = cardRouter;
+module.exports = routes;

@@ -73,13 +73,13 @@ h1.page-title {
 .card-new .card-content:hover span.glyphicon-plus {
     color: #EBEBEB;
 }
-#new-card-modal a.color {
+#modal-new-card a.color {
     display: block;
     color: #3A63AD;
     width: 80px;
     height: 80px;
 }
-#new-card-modal div.colors div {
+#modal-new-card div.colors div {
     float: left;
     margin-right: 10px;
     margin-bottom: 10px;
@@ -88,7 +88,7 @@ h1.page-title {
     width:70px;
     cursor: pointer;
 }
-#new-card-modal div.colors div.active {
+#modal-new-card div.colors div.active {
     border: 8px solid rgba(0,0,0,.7);
 }
 

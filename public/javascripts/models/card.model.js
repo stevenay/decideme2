@@ -5,7 +5,6 @@ define([
     var Card = Backbone.Model.extend({
         defaults: {
             question: '',
-            expiredDate: Date.now(),
             description: '',
             theme: '',
             linkUrl: ''

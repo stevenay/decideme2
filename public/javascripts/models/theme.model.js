@@ -4,7 +4,15 @@ define([
 
     var Theme = Backbone.Model.extend({
         defaults: {
-            mainColorCode: ''
+            themeName: '',
+            mainColorCode: '',
+            selected: false
+        },
+
+        setAllFalse: function () {
+            this.set({
+                selected: true
+            });
         }
     });
 

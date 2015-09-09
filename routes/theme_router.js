@@ -1,11 +1,13 @@
 var express = require('express');
 
-var themeRouter = function(themeModel) {
-    var router = express.Router();
+var routes = function(themeModel) {
+    var themeRouter = express.Router();
+    var utils = require('../utils');
 
-    // Register new member
-    router.post('/', function(req, res) {
+    // Register new theme
+    themeRouter.post('/', utils.ensureAuthenticated, function(req, res) {
         var theme = new themeModel({
+            themeName: req.body.themeName,
             mainColorCode: req.body.mainColorCode
         });
 
@@ -15,23 +17,52 @@ var themeRouter = function(themeModel) {
         });
     });
 
-    router.get('/', ensureAuthenticated, function(req, res) {
+    // Get all themes
+    themeRouter.get('/', utils.ensureAuthenticated, function(req, res) {
         var query = req.query;
-        cardModel.find(query)
-            .populate('participants')
-            .exec( function(err, cards) {
+        themeModel.find(query)
+            .exec( function(err, themes) {
                 if (err) {
                     res.status(500);
                     res.send("has problems in searching cards");
-                } else if (cards) {
-                    res.json(cards);
+                } else if (themes) {
+                    res.json(themes);
                 } else {
-                    res.status(404).send("not found cards");
+                    res.status(404).send("not found themes");
                 }
             });
-    })
+    });
 
-    return router;
+    // middleware for Retrieving Card Object
+    themeRouter.use('/:themeId', function(req, res, next) {
+        themeModel.findById(req.params.themeId, function(err, theme) {
+            if (err) {
+                res.status(500).send(err);
+            } else if (theme) {
+                req.theme = theme;
+                next();
+            } else {
+                res.status(404).send("no theme found");
+            }
+        });
+    });
+
+    // Update a theme
+    themeRouter.put('/:themeId', utils.ensureAuthenticated, function (req, res) {
+
+        req.theme.themeName = req.body.themeName;
+        req.theme.mainColorCode = req.body.mainColorCode;
+
+        req.theme.save(function(err) {
+            if (err) {
+                res.status(500).send(err);
+            } else {
+                res.json(req.theme);
+            }
+        });
+    });
+
+    return themeRouter;
 }
 
-module.exports = themeRouter;
+module.exports = routes;

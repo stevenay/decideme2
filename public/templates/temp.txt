@@ -1,0 +1,8 @@
+ <div data-attr="blue" class="active">&nbsp;</div>
+                                <div data-attr="gray" style="background-color: #616870;">&nbsp;</div>
+                                <div data-attr="blue" style="background-color: #00b4cc;">&nbsp;</div>
+                                <div data-attr="green" style="background-color: #46C66D;">&nbsp;</div>
+                                <div data-attr="yellow" style="background-color: #f7e05f;">&nbsp;</div>
+                                <div data-attr="purple" style="background-color: #B564B5;">&nbsp;</div>
+                                <div data-attr="brown" style="background-color: #9B7E61;">&nbsp;</div>
+                                <div data-attr="lightgray" style="background-color: #aabbcc;">&nbsp;</div>

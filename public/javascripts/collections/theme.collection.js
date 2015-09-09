@@ -9,7 +9,11 @@ define([
 
         initialize: function(models, options) {},
 
-        url: '/api/themes/'
+        url: '/api/themes/',
+
+        selected: function() {
+            return this.findWhere({ selected: true });
+        }
 
     });
 

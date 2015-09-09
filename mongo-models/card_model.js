@@ -5,7 +5,6 @@ var Schema = mongoose.Schema;
 
 var Card = new Schema({
     question: String,
-    expiredDate: Date,
     description: String,
     theme: { type: Schema.Types.ObjectId, ref: 'themes' },
     owner: { type: Schema.Types.ObjectId, ref: 'members' },
