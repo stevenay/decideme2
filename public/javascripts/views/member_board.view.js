@@ -14,9 +14,6 @@ define([
         tagName: 'span',
 
         initialize: function() {
-            this.collection = new CardCollection();
-            this.collection.fetch({reset: true});
-
             this.themeCollection = new ThemeCollection();
             this.themeCollection.fetch({reset: true});
 
@@ -25,10 +22,13 @@ define([
 
             this.listenTo( this.themeCollection, 'reset', this.renderThemes );
             //this.themeCollection.on("change:selected", this.themeSelected , this);
+
+            this.childViews = [];
         },
 
         events: {
-            'click #btn-create-card': 'addCard'
+            'click #btn-create-card': 'addCard',
+            'click .color': 'toggleColor'
         },
 
         show: function() {
@@ -38,6 +38,13 @@ define([
 
         close: function() {
             this.$el.toggle();
+        },
+
+        toggleColor: function (e) {
+            this.$('.colors .active').removeClass('active')
+
+            var el = e.currentTarget;
+            el.classList.add('active');
         },
 
         render: function() {
@@ -50,8 +57,19 @@ define([
             this.$form = this.$modal.find('form');
         },
 
+        destroyAllCards: function() {
+            if (this.childViews.length) {
+                _.each(this.childViews, function (obj) {
+                    obj.close();
+                }, this);
+            }
+
+            this.childViews.length = 0;
+        },
+
         renderAllCards: function() {
             console.log("Render All Cards");
+            this.destroyAllCards();
             this.collection.each( function (card) {
                 this.renderCard(card);
             }, this );
@@ -59,18 +77,16 @@ define([
 
         renderCard: function(card) {
             var cardView = new CardView({ model: card });
-            this.$el.find('#cardBoard').append( cardView.render().el );
+            this.$el.find('#cardBoard div.card-new').after( cardView.render().el );
+            this.childViews.push(cardView);
         },
 
         renderThemes: function() {
+            this.$el.find("div.colors").html("");
+
             this.themeCollection.each( function (theme) {
                 this.renderTheme(theme);
             }, this);
-        },
-
-        renderTheme: function(theme) {
-            var themeView = new ThemeView({ model: theme });
-            this.$el.find('div.colors').append( themeView.render().el );
         },
 
         renderTheme: function(theme) {
@@ -82,10 +98,7 @@ define([
                             style="background:' + color + '"\
                             data-theme-id="' + themeId + '"\
                             data-color="' + themeName + '"></div>')
-                .appendTo($('div.colors'))
-
-            if (this.model.get('_id') == themeId)
-                $color.addClass('active');
+                .appendTo($('div.colors'));
         },
 
         addCard: function(e) {
@@ -101,8 +114,7 @@ define([
                 $(el).val('');
             });
 
-            var colorName = this.$form.find('.colors .active').data('color');
-            formData['theme'] = this.themeCollection.findWhere({themeName: colorName}).get('_id');
+            formData["theme"] = this.$form.find('.colors .active').data('theme-id');
 
             var $modal = this.$modal;
             this.collection.create( formData, {

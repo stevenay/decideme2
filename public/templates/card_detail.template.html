@@ -1,0 +1,174 @@
+<!-- Option-New Popup -->
+<div class="modal" id="option-new-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">Add New Option</h4>
+            </div>
+            <div class="modal-body">
+                <form action="/upload" class="form-horizontal dropzone">
+                    <fieldset>
+                        <div class="form-group">
+                            <label for="input-question" class="col-lg-2 control-label">Option</label>
+                            <div class="col-lg-10">
+                                <input type="text" class="form-control" id="input-question" placeholder="Option Name">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="input-location" class="col-lg-2 control-label">Location</label>
+                            <div class="col-lg-10">
+                                <input type="text" class="form-control" id="input-location" placeholder="Location">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="input-link" class="col-lg-2 control-label">Link</label>
+                            <div class="col-lg-10">
+                                <input type="text" class="form-control" id="input-link" placeholder="Link">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="input-image" class="col-lg-2 control-label">Image</label>
+                            <div class="col-lg-10">
+                                <input id="input-upload-image" type="file" multiple onchange="handleFiles(this.files)">
+                                <button id="button-upload-image">Upload an Image</button>
+                                <div id="block-img-holder">
+                                    &nbsp;
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <div class="form-group pull-right" style="margin-right:0px;">
+                    <div>
+                        <button type="reset" class="btn btn-default">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Create</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <h1 class="page-title"></h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 card card-big">
+        <a href="#">
+            <div class="panel panel-primary card-content">
+                <div class="panel-body">
+                    <h3 class="card-title"><%= question %></h3>
+                    <small>5 participants</small>
+                    &nbsp;
+                    <span class="label label-default" style="background-color:#2d5294;">
+                        <span class="glyphicon glyphicon-king"></span>
+                        &nbsp;
+                        Arsenal Away Jersey
+                    </span>
+                    &nbsp;
+                    <span class="label label-default" style="background-color:#2d5294;">Still Deciding</span>
+                    <div class="card-buttons pull-right">
+                        <button type="button" id="btn-new-option" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="" data-original-title="Add new option">
+                            <span class="glyphicon glyphicon-plus"></span>
+                        </button>
+                        <button type="reset" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="" data-original-title="Settings">
+                            <span class="glyphicon glyphicon-cog"></span>
+                        </button>
+                        <button type="button" id="btn-participants" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="" data-original-title="Participants">
+                            <span class="glyphicon glyphicon-user"></span>
+                        </button>
+                        <!--<button type="submit" class="btn btn-info">Share Link</button>-->
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+
+
+                <div class="clearfix"></div>
+                <!-- style="background-color:#264782;" -->
+                <div class="panel-footer" style="background-color:#264782;">
+                    <p>
+                        <%= description %>
+                    </p>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+
+        $('#btn-participants').on('click', function() {
+            console.log("hello");
+            $('#participants-modal').modal('toggle');
+        });
+
+        $('#btn-new-option').on('click', function(e) {
+            e.preventDefault();
+            $('#option-new-modal').modal('toggle');
+        });
+
+        $('.test-popup-link').magnificPopup({
+//            items: [
+//                {
+//                    src: 'images/arsenal-away-kit.jpg',
+//                    title: 'Arsenal Away Jersey',
+//                    verticalFit: true
+//                },
+//                {
+//                    src: 'images/arsenal-home-kit.jpg',
+//                    title: 'Arsenal Home Jersey'
+//                },
+//                {
+//                    src: 'images/liverpool-white-kit.jpg',
+//                    title: 'Liverpool White Jersey'
+//                }],
+//            gallery: {
+//                enabled: true,
+//                navigateByImgClick: true
+//            },
+            type: 'image'
+            // other options
+        });
+    })
+</script>
+
+<script>
+
+    var buttonUploadImage = $('#button-upload-image');
+    var uploadImgHolder = $('#block-image-holder');
+    buttonUploadImage.on('click', function (e) {
+        var fileInput = $('#input-upload-image');
+        fileInput.click();
+        e.preventDefault();
+    });
+
+    function handleFiles (files) {
+        if ( !window.FileReader ) return;
+        if (files && files[0]) {
+            if ( /^image/.test( files[0].type ) ) {
+                readURL(files[0]);
+                buttonUploadImage.text('Change an Image');
+            } else {
+                uploadImgHolder.removeClass('upload-img-holder');
+                uploadImgHolder.css("background-image", "");
+                buttonUploadImage.text('Create an Image');
+            }
+        }
+    }
+
+    function readURL (file) {
+        var reader = new FileReader();
+        reader.onloadend = function (e) {
+            uploadImgHolder.addClass('upload-img-holder');
+            uploadImgHolder.css("background-image", "url(" + this.result + ")")
+        }
+        reader.readAsDataURL(file);
+    }
+
+</script>

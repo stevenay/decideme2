@@ -24,7 +24,6 @@ require([
     Backbone.View.prototype.close = function(){
         // COMPLETELY UNBIND THE VIEW
         this.undelegateEvents();
-
         this.$el.removeData().unbind();
 
         // Remove view from DOM

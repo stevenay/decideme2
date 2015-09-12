@@ -33,7 +33,7 @@ var routes = function(cardModel) {
         var query = req.query;
         cardModel.find(query)
             .populate('participants')
-            .sort({created_at: 'descending'})
+            .sort({created_at: 'ascending'})
             .exec( function(err, cards) {
                 if (err) {
                     res.status(500);
