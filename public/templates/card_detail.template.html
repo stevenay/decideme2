@@ -30,9 +30,9 @@
                         <div class="form-group">
                             <label for="input-image" class="col-lg-2 control-label">Image</label>
                             <div class="col-lg-10">
-                                <input id="input-upload-image" type="file" multiple onchange="handleFiles(this.files)">
+                                <input id="input-upload-image" type="file" multiple>
                                 <button id="button-upload-image">Upload an Image</button>
-                                <div id="block-img-holder">
+                                <div id="block-image-holder">
                                     &nbsp;
                                 </div>
                             </div>
@@ -72,7 +72,7 @@
                     &nbsp;
                     <span class="label label-default" style="background-color:#2d5294;">Still Deciding</span>
                     <div class="card-buttons pull-right">
-                        <button type="button" id="btn-new-option" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="" data-original-title="Add new option">
+                        <button type="button" id="button-new-option" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="" data-original-title="Add new option">
                             <span class="glyphicon glyphicon-plus"></span>
                         </button>
                         <button type="reset" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="" data-original-title="Settings">
@@ -103,72 +103,39 @@
     $(function () {
         $('[data-toggle="tooltip"]').tooltip();
 
-        $('#btn-participants').on('click', function() {
-            console.log("hello");
-            $('#participants-modal').modal('toggle');
-        });
-
-        $('#btn-new-option').on('click', function(e) {
-            e.preventDefault();
-            $('#option-new-modal').modal('toggle');
-        });
-
-        $('.test-popup-link').magnificPopup({
-//            items: [
-//                {
-//                    src: 'images/arsenal-away-kit.jpg',
-//                    title: 'Arsenal Away Jersey',
-//                    verticalFit: true
-//                },
-//                {
-//                    src: 'images/arsenal-home-kit.jpg',
-//                    title: 'Arsenal Home Jersey'
-//                },
-//                {
-//                    src: 'images/liverpool-white-kit.jpg',
-//                    title: 'Liverpool White Jersey'
-//                }],
-//            gallery: {
-//                enabled: true,
-//                navigateByImgClick: true
-//            },
-            type: 'image'
-            // other options
-        });
+        // Upload Image Button
+//        var buttonUploadImage = $('#button-upload-image');
+//        console.log(buttonUploadImage);
+//
+//        var uploadImgHolder = $('#block-image-holder');
+//
+//        function handleFiles (files) {
+//            if ( !window.FileReader ) return;
+//            if (files && files[0]) {
+//                if ( /^image/.test( files[0].type ) ) {
+//                    readURL(files[0]);
+//                    buttonUploadImage.text('Change an Image');
+//                } else {
+//                    uploadImgHolder.removeClass('upload-image-holder');
+//                    uploadImgHolder.css("background-image", "");
+//                    buttonUploadImage.text('Create an Image');
+//                }
+//            }
+//        }
+//
+//        function readURL (file) {
+//            var reader = new FileReader();
+//            reader.onloadend = function (e) {
+//                uploadImgHolder.addClass('upload-img-holder');
+//                uploadImgHolder.css("background-image", "url(" + this.result + ")")
+//            }
+//            reader.readAsDataURL(file);
+//        }
     })
 </script>
 
 <script>
 
-    var buttonUploadImage = $('#button-upload-image');
-    var uploadImgHolder = $('#block-image-holder');
-    buttonUploadImage.on('click', function (e) {
-        var fileInput = $('#input-upload-image');
-        fileInput.click();
-        e.preventDefault();
-    });
 
-    function handleFiles (files) {
-        if ( !window.FileReader ) return;
-        if (files && files[0]) {
-            if ( /^image/.test( files[0].type ) ) {
-                readURL(files[0]);
-                buttonUploadImage.text('Change an Image');
-            } else {
-                uploadImgHolder.removeClass('upload-img-holder');
-                uploadImgHolder.css("background-image", "");
-                buttonUploadImage.text('Create an Image');
-            }
-        }
-    }
-
-    function readURL (file) {
-        var reader = new FileReader();
-        reader.onloadend = function (e) {
-            uploadImgHolder.addClass('upload-img-holder');
-            uploadImgHolder.css("background-image", "url(" + this.result + ")")
-        }
-        reader.readAsDataURL(file);
-    }
 
 </script>

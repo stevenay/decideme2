@@ -105,7 +105,6 @@ define([
             e.preventDefault();
 
             var formData = {};
-
             this.$form.find( 'input' ).each( function( i, el ) {
                 if ( $(el).val() != '' ) {
                     // el.id is the Javascript code
@@ -113,7 +112,6 @@ define([
                 }
                 $(el).val('');
             });
-
             formData["theme"] = this.$form.find('.colors .active').data('theme-id');
 
             var $modal = this.$modal;
