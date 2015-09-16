@@ -1,10 +1,31 @@
 var express = require('express');
 var mongoose = require('mongoose');
 var multer = require('multer');
+var imageType = require('image-type');
+var crypto = require('crypto');
+var path = require('path');
+
 var storage = multer.diskStorage({
     destination: __dirname + '/../public/images/',
     filename: function (req, file, cb) {
-        cb(null, file.fieldname + '-' + Date.now());
+        console.log(file.originalname);
+        crypto.pseudoRandomBytes(16, function (err, raw) {
+            if (err) return cb(err);
+
+            cb(null, raw.toString('hex') + path.extname(file.originalname))
+        })
+    }
+});
+var upload = multer({
+    storage: storage,
+    fileFilter: function (req, file, cb) {
+        if (imageType(file).ext === "jpg") {
+            // To accept the file pass `true`, like so:
+            cb(null, true);
+        } else {
+            // To reject this file pass `false`, like so:
+            cb(null, false);
+        }
     }
 });
 
@@ -35,3 +56,6 @@ var routes = function(optionModel) {
 }
 
 module.exports = routes;
+//Most people do looking images' `mime type` and `file extension` to know they are in right image file format.
+//
+//As these kinds of validations are not secure enough,
