@@ -6,7 +6,8 @@ define([
 ], function($, _, Backbone, homeMenuTemplate) {
 
     var HomeMenuView = Backbone.View.extend({
-        el: $('nav.navbar'),
+        tagName: 'div',
+        className: 'container',
 
         render: function () {
             var that = this;

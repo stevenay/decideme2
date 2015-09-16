@@ -33,6 +33,7 @@ define([
             var that = this;
             this.checkAuthentication(function (isAuth) {
                 that.isAuth = isAuth;
+                console.log(isAuth);
                 if (!notNeedAuth && !isAuth) {
                     Cookies.set('redirectFromUnAuth', path, {expires: 1});
                     Backbone.history.navigate('home', {trigger: true});
@@ -124,14 +125,16 @@ define([
         },
         setMenuView: function(view, menuType) {
             // don't close the MenuView because they will exist in every pages of the app
-            if (this.menuType == null || this.menuType !== menuType) {
+            if (this.menuType == null || this.menuType != menuType) {
                 this.menuType = menuType;
+
+                console.log(this.menuType);
 
                 if (this.currentMenuView)
                     this.currentMenuView.close();
 
                 this.currentMenuView = view;
-                this.currentMenuView.show(true);
+                $('nav').html(this.currentMenuView.show(true).el);
             }
             else if (this.menuType == menuType) {
                 return;
@@ -148,9 +151,10 @@ define([
         },
 
         cardDetail: function (cardId) {
+            this.setMenuView(this.memberMenuView(), 'member');
+
             if (this._cardCollection != null) {
                 var selectedCard = this.cardCollection().findWhere({ _id: cardId });
-                this.setMenuView(this.memberMenuView(), 'member');
                 this.setBodyView(new CardDetailView({ model: selectedCard }));
             } else {
                 this.cardCollection(cardId);
@@ -165,12 +169,10 @@ define([
             var mbView;
 
             if (this._cardCollection != null && this._cardCollection.length && this._memberBoardView == null) {
-                console.log("Fire Block");
                 mbView = this.memberBoardView({ collection: this.cardCollection() }, false)
                 mbView.render();
             }
             else {
-                console.log("Second Block");
                 mbView = this.memberBoardView({collection: this.cardCollection()}, false)
             }
 
@@ -182,8 +184,10 @@ define([
         });
         app_router.on('route:landing', function () {
             if (this.isAuth) {
+                console.log('member');
                 this.setMenuView(this.memberMenuView(), 'member');
             } else {
+                console.log('home');
                 this.setMenuView(this.homeMenuView(), 'home');
             }
             this.setBodyView(new HomeView());
