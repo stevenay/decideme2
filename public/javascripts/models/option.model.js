@@ -8,8 +8,12 @@ define([
             location: '',
             link: '',
             expiredDate: Date.now(),
-            image: ''
+            imageName: ''
         },
+
+        url: '/api/options',
+
+        idAttribute: '_id',
 
         readFile: function(file) {
             var reader = new FileReader();
@@ -17,6 +21,8 @@ define([
             reader.onload = ( function(theFile, that) {
                 return function(e) {
                     that.set({filename: theFile.name, data: e.target.result});
+                    that.set({imageUrl: theFile.name});
+                    console.log(e.target.result);
                 };
             })(file, this);
 

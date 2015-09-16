@@ -8,7 +8,10 @@ define([
             password: '',
             memberType: 'decideme',
             registerDate: Date.now()
-        }
+        },
+
+        idAttribute: "_id"
+
     });
 
     return Member;

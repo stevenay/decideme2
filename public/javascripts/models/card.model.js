@@ -8,7 +8,9 @@ define([
             description: '',
             theme: '',
             linkUrl: ''
-        }
+        },
+
+        idAttribute: "_id"
     });
 
     return Card;

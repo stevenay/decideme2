@@ -7,30 +7,30 @@
                 <h4 class="modal-title">Add New Option</h4>
             </div>
             <div class="modal-body">
-                <form action="/upload" class="form-horizontal dropzone">
+                <form action="/upload" id="form-add-option" class="form-horizontal dropzone">
                     <fieldset>
                         <div class="form-group">
                             <label for="input-question" class="col-lg-2 control-label">Option</label>
                             <div class="col-lg-10">
-                                <input type="text" class="form-control" id="input-question" placeholder="Option Name">
+                                <input type="text" class="form-control" data-fieldname="name" id="input-question" placeholder="Option Name">
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="input-location" class="col-lg-2 control-label">Location</label>
                             <div class="col-lg-10">
-                                <input type="text" class="form-control" id="input-location" placeholder="Location">
+                                <input type="text" class="form-control" data-fieldname="location" id="input-location" placeholder="Location">
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="input-link" class="col-lg-2 control-label">Link</label>
                             <div class="col-lg-10">
-                                <input type="text" class="form-control" id="input-link" placeholder="Link">
+                                <input type="text" class="form-control" data-fieldname="link" id="input-link" placeholder="Link">
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="input-image" class="col-lg-2 control-label">Image</label>
                             <div class="col-lg-10">
-                                <input id="input-upload-image" type="file" multiple>
+                                <input name="input-upload-image" id="input-upload-image" type="file" multiple>
                                 <button id="button-upload-image">Upload an Image</button>
                                 <div id="block-image-holder">
                                     &nbsp;
@@ -44,7 +44,7 @@
                 <div class="form-group pull-right" style="margin-right:0px;">
                     <div>
                         <button type="reset" class="btn btn-default">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Create</button>
+                        <button type="submit" id="button-add-option" class="btn btn-primary">Create</button>
                     </div>
                 </div>
             </div>
@@ -98,6 +98,8 @@
         </a>
     </div>
 </div>
+
+<div id="image-testing">&nbsp;</div>
 
 <script>
     $(function () {

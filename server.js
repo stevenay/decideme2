@@ -4,7 +4,6 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var multer = require('multer');
 var mongoose = require('mongoose');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
@@ -15,6 +14,7 @@ var routes = require('./routes/index');
 var memberRouter = require('./routes/member_router');
 var cardRouter = require('./routes/card_router');
 var themeRouter = require('./routes/theme_router');
+var optionRouter = require('./routes/option_router');
 
 var app = express();
 
@@ -23,13 +23,13 @@ var memberModel = require('./mongo-models/member_model');
 var rememberMeModel = require('./mongo-models/remember-me-token_model');
 var cardModel = require('./mongo-models/card_model');
 var themeModel = require('./mongo-models/theme_model');
+var optionModel = require('./mongo-models/option_model');
 
 //uncomment after placing your favicon in /public
 app.use(favicon(path.join(__dirname, 'public', 'favicon.png')));
 //app.use(logger('dev'));
-app.use(multer({ dest: "#{__root}/public/img/covers/" } ));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(cookieParser());
 app.use(require('express-session')({
     secret: 'keyboard cat',
@@ -45,6 +45,7 @@ app.use('/', routes);
 app.use('/api/members', memberRouter(memberModel, rememberMeModel));
 app.use('/api/cards', cardRouter(cardModel));
 app.use('/api/themes', themeRouter(themeModel));
+app.use('/api/options', optionRouter(optionModel));
 
 // passport config
 passport.use(memberModel.createStrategy());

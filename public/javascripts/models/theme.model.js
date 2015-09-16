@@ -9,6 +9,8 @@ define([
             selected: false
         },
 
+        idAttribute: '_id',
+
         setAllFalse: function () {
             this.set({
                 selected: true
