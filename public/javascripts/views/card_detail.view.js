@@ -3,13 +3,20 @@ define([
     'underscore',
     'backbone',
     'models/option.model',
+    'views/option.view',
     'text!templates/card_detail.template.html'
-], function($, _, Backbone, OptionModel, cardDetailTemplate) {
+], function($, _, Backbone, OptionModel, OptionView, cardDetailTemplate) {
 
     var CardView = Backbone.View.extend({
         tagName: 'div',
         className: 'container',
         template: _.template(cardDetailTemplate),
+
+        intialize: function () {
+            this.model.optionCollection.fetch();
+            this.listenTo( this.model.optionCollection, 'reset', this.renderOptions );
+            this.childViews = [];
+        },
 
         events: {
             'click #btn-participants': 'showParticipantsModal',
@@ -29,6 +36,32 @@ define([
 
             this.$imageTesting = this.$('#image-testing');
             return this;
+        },
+
+        onClose: function () {
+            this.destroyAllOptions();
+        },
+
+        renderAllOptions: function() {
+            this.model.optionCollection.each( function (option) {
+                this.renderOption(option);
+            }, this );
+        },
+
+        renderOption: function(option) {
+            var optionView = new OptionView({ model: option });
+            this.$el.find('div#optionsBoard').append( optionView.render().el );
+            this.childViews.push(optionView);
+        },
+
+        destroyAllOptions: function() {
+            if (this.childViews.length) {
+                _.each(this.childViews, function (obj) {
+                    obj.close();
+                }, this);
+            }
+
+            this.childViews.length = 0;
         },
 
         showParticipantsModal: function () {
@@ -63,7 +96,6 @@ define([
                 this.checkBLOBFileHeader(escape(file.name), file, this.printImage);
             }
         },
-
         printImage: function (header, file, refObj) {
             console.log(header);
             console.log(refObj.mimeType(header));
@@ -78,7 +110,6 @@ define([
                 refObj.$buttonUploadImage.text('Upload an Image');
             }
         },
-
         readURL: function (file) {
             var reader = new FileReader();
             var that = this;
@@ -89,7 +120,6 @@ define([
             }
             reader.readAsDataURL(file);
         },
-
         getFileExt: function(rawFileName) {
             var ext = null;
             if(rawFileName != null){
@@ -98,7 +128,6 @@ define([
             }
             return ext;
         },
-
         // Return the first few bytes of the file as a hex string
         checkBLOBFileHeader: function (fileName, file, callback) {
             var that = this;
@@ -113,7 +142,6 @@ define([
             };
             fileReader.readAsArrayBuffer(file);
         },
-
         // Add more from http://en.wikipedia.org/wiki/List_of_file_signatures
         mimeType: function (headerString) {
             switch (headerString) {
@@ -136,44 +164,37 @@ define([
         },
 
         addOption: function (e) {
-                e.preventDefault();
-                var formData = {};
-                var multipartData = new FormData();
+            e.preventDefault();
+            var multipartData = new FormData();
 
-                this.$form.find( 'input' ).each( function( i, el ) {
-                    var $el = $(el);
-                    if ( $el.val() != '' && $el.data('fieldname') != null ) {
-                        // el.id is the Javascript code
-                        formData[ $el.data('fieldname') ] = $el.val();
-                        //multipartData.append($el.data('fieldname'), $el.val());
-                    }
-
-                    $el.val('');
-                });
-
-                if (this.imageFile) {
-                    console.log("Reach here1");
-                    var fileName = $.now() + '.' + this.getFileExt(this.imageFile.name);
-                    formData.imageName = fileName;
-                    //multipartData.append('imageName', fileName);
-                    multipartData.append('file', this.imageFile);
+            this.$form.find( 'input' ).each( function( i, el ) {
+                var $el = $(el);
+                if ( $el.val() != '' && $el.data('fieldname') != null ) {
+                    multipartData.append($el.data('fieldname'), $el.val());
                 }
 
-                $.ajax({
-                    url: 'api/options/'+this.model.get('imageName'),
-                    data: multipartData,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    type: 'POST',
-                    success: function(data) {
-                        console.log(data);
-                        var option = new OptionModel(data);
-                    },
-                    error: function(data) {
-                        alert('no upload');
-                    }
-                });
+                $el.val('');
+            });
+            if (this.imageFile) {
+                multipartData.append('file', this.imageFile);
+            }
+            multipartData.append('cardId', this.model.id);
+
+            $.ajax({
+                url: 'api/options/'+this.model.get('imageName'),
+                data: multipartData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                type: 'POST',
+                success: function(data) {
+                    console.log(data);
+                    var option = new OptionModel(data);
+                },
+                error: function(data) {
+                    alert('no upload');
+                }
+            });
 
                 //option.save(null, {
                 //    wait: true,

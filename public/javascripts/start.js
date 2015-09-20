@@ -22,6 +22,11 @@ require([
 ], function (App) {
     // All the initialization code here
     Backbone.View.prototype.close = function(){
+
+        if (this.onClose){
+            this.onClose();
+        }
+
         // COMPLETELY UNBIND THE VIEW
         this.undelegateEvents();
         this.$el.removeData().unbind();
@@ -29,10 +34,6 @@ require([
         // Remove view from DOM
         this.remove();
         Backbone.View.prototype.remove.call(this);
-
-        if (this.onClose){
-            this.onClose();
-        }
     }
 
     Backbone.View.prototype.show = function(willRender) {

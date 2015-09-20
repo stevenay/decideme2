@@ -6,7 +6,7 @@ var crypto = require('crypto');
 var path = require('path');
 
 var storage = multer.diskStorage({
-    destination: __dirname + '/../public/images/',
+    destination: __dirname + '/../public/images/options/',
     filename: function (req, file, cb) {
         console.log(file.originalname);
         crypto.pseudoRandomBytes(16, function (err, raw) {
@@ -18,15 +18,7 @@ var storage = multer.diskStorage({
 });
 var upload = multer({
     storage: storage,
-    fileFilter: function (req, file, cb) {
-        if (imageType(file).ext === "jpg") {
-            // To accept the file pass `true`, like so:
-            cb(null, true);
-        } else {
-            // To reject this file pass `false`, like so:
-            cb(null, false);
-        }
-    }
+    limits: {fileSize: 1000000, files:1}
 });
 
 var routes = function(optionModel) {
@@ -35,16 +27,16 @@ var routes = function(optionModel) {
 
     // Register new option
     optionRouter.post('/:imageName', upload.single('file'), function(req, res) {
-
-        console.log(req.file);
-
         var option = new optionModel({
             name: req.body.name,
             location: req.body.location,
             link: req.body.link,
             imageName: req.file.filename,
-            expiredDate: req.body.expiredDate
+            expiredDate: req.body.expiredDate,
+            card: req.body.cardId
         });
+
+        console.log(option);
 
         option.save(function(err, savedOption) {
             if (err) { console.log(err); res.status(500).send("Cannot save option!"); }
