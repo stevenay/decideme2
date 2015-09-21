@@ -44,6 +44,23 @@ var routes = function(optionModel) {
         });
     });
 
+    // Get All Options
+    optionRouter.get('/', utils.ensureAuthenticated, function(req, res) {
+        var query = req.query;
+        optionModel.find(query)
+            .sort({created_at: 'ascending'})
+            .exec( function(err, options) {
+                if (err) {
+                    res.status(500);
+                    res.send("has problems in searching options");
+                } else if (options) {
+                    res.json(options);
+                } else {
+                    res.status(404).send("not found options");
+                }
+            });
+    });
+
     return optionRouter;
 }
 

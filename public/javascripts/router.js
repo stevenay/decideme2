@@ -128,8 +128,6 @@ define([
             if (this.menuType == null || this.menuType != menuType) {
                 this.menuType = menuType;
 
-                console.log(this.menuType);
-
                 if (this.currentMenuView)
                     this.currentMenuView.close();
 

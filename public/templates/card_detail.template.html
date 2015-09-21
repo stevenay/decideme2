@@ -49,7 +49,7 @@
             <div class="modal-footer">
                 <div class="form-group pull-right" style="margin-right:0px;">
                     <div>
-                        <button type="reset" class="btn btn-default">Cancel</button>
+                        <button type="reset" id="button-cancel-option" class="btn btn-default">Cancel</button>
                         <button type="submit" id="button-add-option" class="btn btn-primary">Create</button>
                     </div>
                 </div>
@@ -111,36 +111,11 @@
 <script>
     $(function () {
         $('[data-toggle="tooltip"]').tooltip();
+    });
 
-        // Upload Image Button
-//        var buttonUploadImage = $('#button-upload-image');
-//        console.log(buttonUploadImage);
-//
-//        var uploadImgHolder = $('#block-image-holder');
-//
-//        function handleFiles (files) {
-//            if ( !window.FileReader ) return;
-//            if (files && files[0]) {
-//                if ( /^image/.test( files[0].type ) ) {
-//                    readURL(files[0]);
-//                    buttonUploadImage.text('Change an Image');
-//                } else {
-//                    uploadImgHolder.removeClass('upload-image-holder');
-//                    uploadImgHolder.css("background-image", "");
-//                    buttonUploadImage.text('Create an Image');
-//                }
-//            }
-//        }
-//
-//        function readURL (file) {
-//            var reader = new FileReader();
-//            reader.onloadend = function (e) {
-//                uploadImgHolder.addClass('upload-img-holder');
-//                uploadImgHolder.css("background-image", "url(" + this.result + ")")
-//            }
-//            reader.readAsDataURL(file);
-//        }
-    })
+    $('.card-img-holder').magnificPopup({
+        type: 'image'
+    });
 </script>
 
 <script>

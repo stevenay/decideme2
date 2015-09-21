@@ -2,19 +2,23 @@ define([
     'jquery',
     'underscore',
     'backbone',
+    'magnific_popup',
     'models/option.model',
     'views/option.view',
     'text!templates/card_detail.template.html'
-], function($, _, Backbone, OptionModel, OptionView, cardDetailTemplate) {
+], function($, _, Backbone, MagnificPopup, OptionModel, OptionView, cardDetailTemplate) {
 
     var CardView = Backbone.View.extend({
         tagName: 'div',
         className: 'container',
         template: _.template(cardDetailTemplate),
 
-        intialize: function () {
-            this.model.optionCollection.fetch();
-            this.listenTo( this.model.optionCollection, 'reset', this.renderOptions );
+        initialize: function () {
+            this.model.optionCollection.fetch({ reset: true });
+
+            this.listenTo( this.model.optionCollection, 'add', this.renderOption );
+            this.listenTo( this.model.optionCollection, 'reset', this.renderAllOptions );
+
             this.childViews = [];
         },
 
@@ -23,7 +27,8 @@ define([
             'click #button-new-option': 'showNewOptionModal',
             'click #button-upload-image': 'showImageUploadDialog',
             'change #input-upload-image': 'handleUploadFile',
-            'click #button-add-option': 'addOption'
+            'click #button-add-option': 'addOption',
+            'click #button-cancel-option': 'cancelNewOptionModal',
         },
 
         render: function () {
@@ -44,16 +49,15 @@ define([
 
         renderAllOptions: function() {
             this.model.optionCollection.each( function (option) {
-                this.renderOption(option);
+                this.renderOption(option, true);
             }, this );
         },
-
-        renderOption: function(option) {
+        renderOption: function(option, addFromCollection) {
             var optionView = new OptionView({ model: option });
             this.$el.find('div#optionsBoard').append( optionView.render().el );
+
             this.childViews.push(optionView);
         },
-
         destroyAllOptions: function() {
             if (this.childViews.length) {
                 _.each(this.childViews, function (obj) {
@@ -68,12 +72,14 @@ define([
             $('#participants-modal').modal('toggle');
             e.preventDefault();
         },
-
         showNewOptionModal: function (e) {
             $('#option-new-modal').modal('toggle');
             e.preventDefault();
         },
-
+        cancelNewOptionModal: function (e) {
+            this.formCleanUp();
+            $('#option-new-modal').modal('toggle');
+        },
         showImageUploadDialog: function (e) {
             this.$fileInput.click();
             e.preventDefault();
@@ -106,8 +112,8 @@ define([
             } else {
                 refObj.$uploadImageHolder.removeClass('upload-image-holder');
                 refObj.$uploadImageHolder.css("background-image", "");
-                refObj.$uploadImageHolder.append("<h4>Not supported image format.</h4>");
                 refObj.$buttonUploadImage.text('Upload an Image');
+                refObj.$uploadImageHolder.append("<h4>Not supported image format.</h4>");
             }
         },
         readURL: function (file) {
@@ -163,6 +169,17 @@ define([
             return type;
         },
 
+        formCleanUp: function () {
+            this.$form.find('input').each( function(i,el) {
+                var $el = $(el);
+                $el.val('');
+            });
+
+            this.$uploadImageHolder.removeClass('upload-image-holder');
+            this.$uploadImageHolder.css("background-image", "");
+            this.$buttonUploadImage.text('Upload an Image');
+        },
+
         addOption: function (e) {
             e.preventDefault();
             var multipartData = new FormData();
@@ -172,14 +189,13 @@ define([
                 if ( $el.val() != '' && $el.data('fieldname') != null ) {
                     multipartData.append($el.data('fieldname'), $el.val());
                 }
-
-                $el.val('');
             });
             if (this.imageFile) {
                 multipartData.append('file', this.imageFile);
             }
             multipartData.append('cardId', this.model.id);
 
+            var self = this;
             $.ajax({
                 url: 'api/options/'+this.model.get('imageName'),
                 data: multipartData,
@@ -188,13 +204,28 @@ define([
                 processData: false,
                 type: 'POST',
                 success: function(data) {
-                    console.log(data);
-                    var option = new OptionModel(data);
+                    self.model.optionCollection.add({
+                        _id: data._id,
+                        card: data.card,
+                        created_at: data.created_at,
+                        expiredDate: data.expiredDate,
+                        imageName: data.imageName,
+                        link: data.link,
+                        location: data.location,
+                        name: data.name,
+                        updated_at: data.updated_at
+                    });
+
+                    // clean up process
+                    self.imageFile = null;
+                    self.formCleanUp();
                 },
                 error: function(data) {
                     alert('no upload');
                 }
             });
+
+
 
                 //option.save(null, {
                 //    wait: true,

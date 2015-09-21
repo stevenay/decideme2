@@ -4,7 +4,8 @@ require.config({
         backbone: 'libs/backbone-min',
         underscore: 'libs/underscore-min',
         templates: '../templates',
-        cookie: 'libs/js.cookie'
+        cookie: 'libs/js.cookie',
+        magnific_popup: 'libs/magnific-popup.min'
     },
     shim: {
         'libs/underscore/underscore': {

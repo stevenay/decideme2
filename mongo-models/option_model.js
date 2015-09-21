@@ -9,6 +9,7 @@ var Option = new Schema({
     link: String,
     imageName: String,
     expiredDate: { type: Date },
+    voteCount: Number,
     card: { type: Schema.Types.ObjectId, ref: 'cards' },
     created_at: { type: Date },
     updated_at: { type: Date }
