@@ -33,7 +33,6 @@ define([
             var that = this;
             this.checkAuthentication(function (isAuth) {
                 that.isAuth = isAuth;
-                console.log(isAuth);
                 if (!notNeedAuth && !isAuth) {
                     Cookies.set('redirectFromUnAuth', path, {expires: 1});
                     Backbone.history.navigate('home', {trigger: true});

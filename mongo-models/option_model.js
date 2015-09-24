@@ -11,6 +11,7 @@ var Option = new Schema({
     expiredDate: { type: Date },
     voteCount: Number,
     card: { type: Schema.Types.ObjectId, ref: 'cards' },
+    voters: [{ type: Schema.Types.ObjectId, ref: 'members' }],
     created_at: { type: Date },
     updated_at: { type: Date }
 });

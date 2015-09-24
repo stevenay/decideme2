@@ -28,7 +28,7 @@ define([
             'click #button-upload-image': 'showImageUploadDialog',
             'change #input-upload-image': 'handleUploadFile',
             'click #button-add-option': 'addOption',
-            'click #button-cancel-option': 'cancelNewOptionModal',
+            'click #button-cancel-option': 'cancelNewOptionModal'
         },
 
         render: function () {
@@ -197,7 +197,7 @@ define([
 
             var self = this;
             $.ajax({
-                url: 'api/options/'+this.model.get('imageName'),
+                url: 'api/options/',
                 data: multipartData,
                 cache: false,
                 contentType: false,
@@ -205,7 +205,7 @@ define([
                 type: 'POST',
                 success: function(data) {
                     self.model.optionCollection.add({
-                        _id: data._id,
+                        id: data._id,
                         card: data.card,
                         created_at: data.created_at,
                         expiredDate: data.expiredDate,

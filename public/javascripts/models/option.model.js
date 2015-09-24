@@ -3,17 +3,18 @@ define([
 ], function (Backbone) {
 
     var Option = Backbone.Model.extend({
+        idAttribute: "_id",
+
         defaults: {
             name: '',
             location: '',
             link: '',
+            voteCount: 0,
             expiredDate: Date.now(),
             imageName: ''
         },
 
-        url: '/api/options',
-
-        idAttribute: '_id',
+        urlRoot: '/api/options/',
 
         readFile: function(file) {
             var reader = new FileReader();
@@ -28,6 +29,10 @@ define([
 
             // Read in the image file as a data URL.
             reader.readAsDataURL(file);
+        },
+
+        vote: function() {
+            this.save();
         }
     });
 

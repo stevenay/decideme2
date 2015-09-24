@@ -6,8 +6,22 @@ var Member = new Schema({
     email: String,
     password: String,
     memberType: String,
-    registerDate: Date
+    created_at: { type: Date },
+    updated_at: { type: Date }
 });
+
+Member.pre('save', function(next) {
+    now = new Date();
+    this.updated_at = now;
+    if ( !this.created_at ) {
+        this.created_at = now;
+    }
+    next();
+});
+
+//Card.pre('update', function(next) {
+//
+//});
 
 Member.plugin(passportLocalMongoose, {usernameField: 'email'});
 

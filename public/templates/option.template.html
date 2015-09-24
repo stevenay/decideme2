@@ -4,18 +4,19 @@
     </a>
     <div class="panel-body">
         <span class="label label-default" style="background-color:#2b3e50; color:#bbb">Elective</span>
-        <a href="#" class="pull-right"><span class="glyphicon glyphicon-pencil"></span></a>
+        <a href="#" class="pull-right button-settings" data-toggle="tooltip" data-placement="top" title="" data-original-title="Remove"><span class="glyphicon glyphicon-remove"></span></a>
+        <a href="#" class="pull-right button-settings" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit"><span class="glyphicon glyphicon-cog"></span></a>
         <div class="clearfix"></div>
         <h4><%= name %></h4>
         <small>
             <ul class="list-unstyled list-group">
                 <li><span class="glyphicon glyphicon-map-marker"></span><%= location %></li>
                 <li><span class="glyphicon glyphicon-link"></span><%= link %></li>
-                <li><span class="glyphicon glyphicon-thumbs-up"></span>Votes (0)</li>
+                <li><span class="glyphicon glyphicon-thumbs-up"></span>Votes (<%= voteCount %>)</li>
             </ul>
         </small>
     </div>
     <div class="panel-footer text-center">
-        <a href="#" class="btn"><span class="glyphicon glyphicon-ok"></span></a>
+        <a href="#" class="btn link-vote" data-toggle="tooltip" data-placement="top" title="Vote"><span class="glyphicon glyphicon-ok"></span></a>
     </div>
 </div>

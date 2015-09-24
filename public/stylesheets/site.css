@@ -125,9 +125,36 @@ h1.page-title {
 }
 
 /* OPTIONS Style */
+.option {
+    border-radius: 10px 10px 0 0;
+}
+
 .option a {
     font-size: 1.5em;
-    border-radius: 15px;
+    border-radius: 10px;
+}
+
+.option .button-settings {
+    font-size:15px;
+    color:#3d4956;
+    margin-left:5px;
+}
+
+.option .button-settings:hover {
+    color: #485563;
+}
+
+.option .link-vote {
+    color: #bebebe;
+    /*background-color: #df691a;*/
+    /*border-radius: 50%;*/
+    /*width: 30px;*/
+    /*height: 30px;*/
+}
+
+.option .link-vote:hover {
+    color: #fff;
+    transition: color 0.5s ease;
 }
 
 .option a.disabled {

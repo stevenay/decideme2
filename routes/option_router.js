@@ -26,7 +26,7 @@ var routes = function(optionModel) {
     var utils = require('../utils');
 
     // Register new option
-    optionRouter.post('/:imageName', upload.single('file'), function(req, res) {
+    optionRouter.post('/', utils.ensureAuthenticated, upload.single('file'), function(req, res) {
         var option = new optionModel({
             name: req.body.name,
             location: req.body.location,
@@ -36,11 +36,53 @@ var routes = function(optionModel) {
             card: req.body.cardId
         });
 
-        console.log(option);
-
         option.save(function(err, savedOption) {
             if (err) { console.log(err); res.status(500).send("Cannot save option!"); }
             res.json(savedOption);
+        });
+    });
+
+    // Update option
+    optionRouter.patch('/vote/:optionId', utils.ensureAuthenticated, getOptionModel, function (req, res) {
+        var updateClause = { $addToSet: { voters: req.user._id}, updated_at: Date.now() };
+
+        updateClause.voteCount
+        var conditionClause = { _id: req.params.optionId };
+
+        optionModel.update(
+            conditionClause,
+            updateClause,
+            function (err) {
+                if (err) {
+                    res.status(500).send(err);
+                } else {
+                    res.json();
+                }
+            });
+    });
+
+    optionRouter.use('/:optionId', function(req, res, next) {
+        optionModel.findById(req.params.optionId, function(err, option) {
+            if (err) {
+                res.status(500).send(err);
+            } else if (option) {
+                req.option = option;
+                next();
+            } else {
+                res.status(404).send("no option found");
+            }
+        });
+    });
+
+    optionRouter.put('/:optionId', utils.ensureAuthenticated, function (req, res) {
+        req.option.voteCount = req.body.voteCount;
+
+        req.option.save(function(err) {
+            if (err) {
+                res.status(500).send(err);
+            } else {
+                res.json(req.option);
+            }
         });
     });
 
@@ -60,6 +102,20 @@ var routes = function(optionModel) {
                 }
             });
     });
+
+    // utils
+    var getOptionModel = function (req, res, next) {
+        optionModel.findById(req.params.optionId, function(err, option) {
+            if (err) {
+                res.status(500).send(err);
+            } else if (option) {
+                req.option = option;
+                next();
+            } else {
+                res.status(404).send("no option found");
+            }
+        });
+    }
 
     return optionRouter;
 }

@@ -8,17 +8,16 @@ var memberRouter = function(memberModel, rememberMeModel) {
 
     // Register new member
     router.post('/', function(req, res) {
-        memberModel.register(new Member({
+        memberModel.register(new memberModel({
                 email: req.body.email,
-                memberType: req.body.memberType,
-                registerDate: req.body.registerDate
+                memberType: req.body.memberType
             }), req.body.password,
             function (err, member) {
                 if (err) {
                     return res.status(500).send(err);
                 }
                 passport.authenticate('local')(req, res, function () {
-                    res.send('hello again');
+                    res.status(200).send('Successfully created');
                 });
             });
     });
