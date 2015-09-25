@@ -11,8 +11,12 @@ define([
             link: '',
             voteCount: 0,
             expiredDate: Date.now(),
-            imageName: ''
+            voters: [],
+            imageName: '',
+            voted: false
         },
+
+        attrBlacklist: ['voted'],
 
         urlRoot: '/api/options/',
 
@@ -31,8 +35,20 @@ define([
             reader.readAsDataURL(file);
         },
 
-        vote: function() {
-            this.save();
+        // Overwrite save function
+        save: function(attrs, options) {
+            options || (options = {});
+            attrs || (attrs = _.clone(this.attributes));
+
+            if (this.attrBlacklist != null )
+                blackListed =  _.omit(this.attributes, this.attrBlacklist);
+            else
+                blackListed = this.attributes;
+
+            options.data = JSON.stringify(blackListed);
+
+            // Proxy the call to the original save function
+            return Backbone.Model.prototype.save.call(this, attrs, options);
         }
     });
 

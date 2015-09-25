@@ -54,7 +54,7 @@ var memberRouter = function(memberModel, rememberMeModel) {
     router.get('/check-authentication',
         utils.ensureAuthenticated,
         function(req, res) {
-            res.json({ status: 'authorized' });
+            res.json({ status: 'authorized', memberId: req.user._id });
         });
 
     // Get particular member

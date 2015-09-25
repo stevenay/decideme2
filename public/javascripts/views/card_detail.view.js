@@ -13,7 +13,9 @@ define([
         className: 'container',
         template: _.template(cardDetailTemplate),
 
-        initialize: function () {
+        initialize: function (options) {
+            this.options = options || {};
+
             this.model.optionCollection.fetch({ reset: true });
 
             this.listenTo( this.model.optionCollection, 'add', this.renderOption );
@@ -53,7 +55,7 @@ define([
             }, this );
         },
         renderOption: function(option, addFromCollection) {
-            var optionView = new OptionView({ model: option });
+            var optionView = new OptionView({ model: option, memberId: this.options.memberId });
             this.$el.find('div#optionsBoard').append( optionView.render().el );
 
             this.childViews.push(optionView);

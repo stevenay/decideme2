@@ -45,6 +45,7 @@ define([
                         if (data.status == 'login_failed') {
                             console.log("Email and Password do not match.");
                         } else if (data.status == 'login_success') {
+
                             that.$el.find('#login-modal').modal('hide');
                             var redirectFrom = Cookies.get('redirectFromUnAuth');
                             if (redirectFrom) {

@@ -44,37 +44,32 @@ var routes = function(optionModel) {
 
     // Update option
     optionRouter.patch('/vote/:optionId', utils.ensureAuthenticated, getOptionModel, function (req, res) {
-        var updateClause = { $addToSet: { voters: req.user._id}, updated_at: Date.now() };
 
-        updateClause.voteCount
-        var conditionClause = { _id: req.params.optionId };
+        var updateClause, voteCounted;
+        var indexOfMember = req.option.voters.indexOf(req.user._id);
+        var vote;
+        voteCounted = (req.option.voteCount) ? req.option.voteCount : 0;
 
-        optionModel.update(
-            conditionClause,
-            updateClause,
-            function (err) {
-                if (err) {
-                    res.status(500).send(err);
-                } else {
-                    res.json();
-                }
-            });
-    });
+        if ( indexOfMember > -1  ) {
+            vote = false;
+            updateClause = {$pull: {voters: req.user._id}, voteCount: --voteCounted};
+        }
+        else {
+            vote = true;
+            updateClause = { $addToSet: { voters: req.user._id}, voteCount: ++voteCounted };
+        }
 
-    optionRouter.use('/:optionId', function(req, res, next) {
-        optionModel.findById(req.params.optionId, function(err, option) {
+        optionModel.findByIdAndUpdate(req.params.optionId, updateClause, function(err, option) {
             if (err) {
+                console.log(err);
                 res.status(500).send(err);
-            } else if (option) {
-                req.option = option;
-                next();
             } else {
-                res.status(404).send("no option found");
+                res.json({ voteCount: voteCounted, voted: vote });
             }
         });
     });
 
-    optionRouter.put('/:optionId', utils.ensureAuthenticated, function (req, res) {
+    optionRouter.put('/:optionId', utils.ensureAuthenticated, getOptionModel, function (req, res) {
         req.option.voteCount = req.body.voteCount;
 
         req.option.save(function(err) {
@@ -104,7 +99,7 @@ var routes = function(optionModel) {
     });
 
     // utils
-    var getOptionModel = function (req, res, next) {
+    function getOptionModel (req, res, next) {
         optionModel.findById(req.params.optionId, function(err, option) {
             if (err) {
                 res.status(500).send(err);

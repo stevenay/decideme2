@@ -23,6 +23,7 @@ define([
         intialize: function () {
         },
         isAuth: false,
+        memberId: false,
         notRequiresAuth: ['#home'],
         preventAccessWhenAuth : ['#login'],
         before: function (params, next) {
@@ -47,12 +48,13 @@ define([
             var path = Backbone.history.location.hash;
             if (path == '#logout') {
                 this.isAuth = false;
+                this.memberId = false;
             }
-
         },
         checkAuthentication: function(cb) {
             var url = '/api/members/check-authentication';
             var auth = false;
+            var self = this;
             $.ajax({
                 url: url,
                 type: 'get',
@@ -65,6 +67,7 @@ define([
                         if (data.status == 'not_authorized') {
                             auth = false;
                         } else if (data.status == 'authorized') {
+                            self.memberId = data.memberId; // save logged in memberId
                             auth = true;
                         }
                     }
@@ -152,7 +155,7 @@ define([
 
             if (this._cardCollection != null) {
                 var selectedCard = this.cardCollection().findWhere({ _id: cardId });
-                this.setBodyView(new CardDetailView({ model: selectedCard }));
+                this.setBodyView(new CardDetailView({ model: selectedCard, memberId: this.memberId }));
             } else {
                 this.cardCollection(cardId);
             }

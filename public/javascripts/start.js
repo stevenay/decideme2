@@ -93,5 +93,7 @@ require([
     //    }
     //});
 
+    window.testGlobal = "I'm global";
+
     App.initailize();
 });

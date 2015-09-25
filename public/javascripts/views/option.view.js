@@ -11,19 +11,29 @@ define([
         className: 'col-md-3 col-sm-4 col-xs-6',
         template: _.template(optionTemplate),
 
+        initialize: function (options) {
+            this.options = options || {};
+            this.listenTo(this.model, 'change:voted', this.changeVoteState);
+            this.listenTo(this.model, 'change:voteCount', this.changeVoteCount);
+        },
+
         events: {
             'click .link-vote': 'processVote'
         },
 
         render: function () {
             this.$el.html( this.template( this.model.toJSON() ) );
+            this.$linkVote = this.$(".link-vote");
+            this.$voteCount = this.$("#block-vote-count");
 
-            this.$('.link-popup-image').magnificPopup({
-                type: 'image'
-            });
+            if (this.model.get('voters').length > 0) {
+                var indexOfMember = this.model.get('voters').indexOf(this.options.memberId);
+                if (indexOfMember > -1)
+                    this.model.set('voted', true);
+            }
 
+            this.$('.link-popup-image').magnificPopup({ type: 'image' });
             this.$('[data-toggle="tooltip"]').tooltip();
-
             return this;
         },
 
@@ -37,30 +47,29 @@ define([
             // Vote Saving
             this.model.save({}, {
                 patch: true,
-                url: 'api/options/vote/' + this.model.id,
-                success: function (model, response) {
-                    console.log("Successfully Voted");
-                    self.changeVote(el.data('voted'), el);
-                },
-                error: function (model, response) {
-                    console.log("Error occurred in Voting");
-                }
+                url: 'api/options/vote/' + this.model.id
             });
 
             el.blur();
             e.preventDefault();
         },
 
-        changeVote: function (voted, el) {
-            if (voted !== true) {
-                el.data('voted', true);
-                el.css('color', '#df691a');
-                el.attr('data-original-title', 'Already Voted').tooltip('fixTitle');
+        changeVoteState: function (option, voted) {
+            console.log(this.$linkVote);
+            console.log(voted);
+            if (voted === true) {
+                this.$linkVote.data('voted', true);
+                this.$linkVote.css('color', '#df691a');
+                this.$linkVote.attr('data-original-title', 'Already Voted').tooltip('fixTitle');
             } else {
-                el.data('voted', false);
-                el.css('color', '#bebebe');
-                el.attr('data-original-title', 'Vote').tooltip('fixTitle');
+                this.$linkVote.data('voted', false);
+                this.$linkVote.css('color', '#bebebe');
+                this.$linkVote.attr('data-original-title', 'Vote').tooltip('fixTitle');
             }
+        },
+
+        changeVoteCount: function (option, voteCount) {
+            this.$voteCount.html(voteCount);
         }
     });
 
