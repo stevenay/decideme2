@@ -112,7 +112,7 @@ define([
                 }
                 $(el).val('');
             });
-            formData["theme"] = this.$form.find('.colors .active').data('theme-id');
+            formData.theme = this.$form.find('.colors .active').data('theme-id');
 
             var $modal = this.$modal;
             this.collection.create( formData, {

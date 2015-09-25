@@ -14,7 +14,7 @@ var routes = function(cardModel) {
         var card = new cardModel({
             question: req.body.question,
             description: req.body.description,
-            theme: req.body.themeId,
+            theme: req.body.theme,
             owner: req.user._id,
             status: 'created',
             linkUrl: 'auto generate from the Server'
@@ -31,7 +31,9 @@ var routes = function(cardModel) {
     // Get All Cards
     cardRouter.get('/', utils.ensureAuthenticated, function(req, res) {
         var query = req.query;
-        cardModel.find(query)
+        cardModel.find({
+                owner: req.user._id
+            })
             .populate('participants')
             .sort({created_at: 'ascending'})
             .exec( function(err, cards) {
