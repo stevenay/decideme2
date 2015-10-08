@@ -1,18 +1,52 @@
-<div class="panel panel-primary option">
-    <a class="link-popup-image" href="images/options/<%= imageName %>" title="<%= name %>">
-        <div class="card-img-holder" style="background-image: url(images/options/<%= imageName %>);"></div>
-    </a>
-    <div class="panel-body">
-        <span class="label label-default" style="background-color:#2b3e50; color:#bbb">Elective</span>
-        <a href="#" class="pull-right button-settings" data-toggle="tooltip" data-placement="top" title="" data-original-title="Remove"><span class="glyphicon glyphicon-remove"></span></a>
-        <a href="#" class="pull-right button-settings" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit"><span class="glyphicon glyphicon-cog"></span></a>
-        <div class="clearfix"></div>
-        <h4><%= name %></h4>
+<div class="panel panel-primary">
+    <% if (imageName === "") { %>
+        <div class="card-img-holder">
+            <h2><%= name %></h2>
+            <b><%= voteCount %> &nbsp; Votes</b>
+        </div>
+    <% } else { %>
+        <a class="link-popup-image"
+           href="images/options/<%= imageName %>"
+           title="<%= name %>">
+            <div id="block-card-img-holder" class="card-img-holder" style="background-image: url(images/options/<%= imageName %>);"></div>
+        </a>
+    <% } %>
+    <div class="panel-body item-background">
+
+
+
+        <a href="#" id="link-edit" class="pull-right button-settings" data-toggle="tooltip" data-placement="top" title="" data-original-title="Remove"><span class="glyphicon glyphicon-remove"></span></a>
+        <span id="span-winner" <%= (alreadySelectedOption && status === "") ? 'style="display:none"' : '' %>>
+            <a href="#" id="link-winner" class="pull-right button-settings" data-toggle="tooltip" data-placement="top" title="" data-original-title="Winner">
+                <span class="glyphicon glyphicon-check"  <%= (status != null && status !== "" && status === "selected") ?  'style="color:#df691a"' : '' %>></span>
+            </a>
+        </span>
+        <a href="#" id="link-edit" class="pull-right button-settings" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit"><span class="glyphicon glyphicon-cog"></span></a>
+
+
+
+        <!--<div class="clearfix"></div>-->
+        <h5>
+            <span id="span-name"><%= name %></span>
+            <% if (status != null && status !== "" && status === "selected") { %>
+                &nbsp; <span class="label" style="background-color:#df691a"><%= status %></span>
+            <% } %>
+        </h5>
+
         <small>
             <ul class="list-unstyled list-group">
-                <li><span class="glyphicon glyphicon-map-marker"></span><%= location %></li>
-                <li><span class="glyphicon glyphicon-link"></span><%= link %></li>
-                <li><span class="glyphicon glyphicon-thumbs-up"></span>Votes (<span id="block-vote-count"><%= voteCount %></span>)</li>
+                <li>
+                    <span class="glyphicon glyphicon-map-marker"></span>
+                    <span id="span-location"><%= location != "" ? location : "Unspecified" %></span>
+                </li>
+                <li>
+                    <span class="glyphicon glyphicon-link"></span>
+                    <span id="span-link"><%= link != "" ? link : "Unspecified" %></span>
+                </li>
+                <li>
+                    <span class="glyphicon glyphicon-thumbs-up"></span>Votes
+                    (<span id="block-vote-count"><%= voteCount %></span>)
+                </li>
             </ul>
         </small>
     </div>

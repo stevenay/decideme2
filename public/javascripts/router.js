@@ -153,6 +153,8 @@ define([
         cardDetail: function (cardId) {
             this.setMenuView(this.memberMenuView(), 'member');
 
+            // doesn't need to fetch cardCollection
+            // it just need to fetch one card if he is not the owner
             if (this._cardCollection != null) {
                 var selectedCard = this.cardCollection().findWhere({ _id: cardId });
                 this.setBodyView(new CardDetailView({ model: selectedCard, memberId: this.memberId }));
@@ -160,6 +162,7 @@ define([
                 this.cardCollection(cardId);
             }
 
+            this.setBodyView(new CardDetailView({ model: selectedCard, memberId: this.memberId }));
         }
     });
 

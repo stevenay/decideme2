@@ -119,25 +119,34 @@ h1.page-title {
     background-color: #dc9fbb;
 }
 
+.card-big {
+
+}
+
 .card-big .card-content {
+    border-radius: 2px 10px !important;
     height: 100%;
     max-height: 100%;
 }
 
 /* OPTIONS Style */
 .option {
-    border-radius: 10px 10px 0 0;
+    border-radius: 8px;
 }
 
 .option a {
     font-size: 1.5em;
-    border-radius: 10px;
+    border-radius: 8px;
+}
+
+.option .panel-body h5 {
+    font-weight: bold;
 }
 
 .option .button-settings {
     font-size:15px;
     color:#3d4956;
-    margin-left:5px;
+    margin-left: 5px;
 }
 
 .option .button-settings:hover {
@@ -174,6 +183,7 @@ h1.page-title {
 .option .card-img-holder {
     position: relative;
     padding-bottom: 70%;
+    height: 80px;
     background-color: rgba(0,0,0,.1);
     background-position: center center;
     background-repeat: no-repeat;
@@ -181,6 +191,18 @@ h1.page-title {
     border-radius: 5px 5px 0 0;
     overflow: hidden;
     cursor: zoom-in;
+}
+
+.option .card-img-holder {
+    text-align: center;
+}
+
+.option .card-img-holder b {
+    font-size: 15px;
+}
+
+.option .card-img-holder h2 {
+    margin-top: 55px;
 }
 
 .upload-image-holder {
@@ -234,3 +256,193 @@ h1.page-title {
         padding-top:15px;
     }
 }
+
+/* Theme Color Set */
+.theme-blue .background {
+    background-color: #3059a1;
+}
+.theme-blue .sub-background {
+    background-color: #2d5294;
+}
+.theme-blue .badge-background {
+    background-color: #264782;
+}
+.theme-blue .alert-background {
+    background-color: #323c54;
+}
+
+.theme-grey .background {
+    background-color: #616870;
+}
+
+.theme-cygan .background {
+    background-color: #00b4cc;
+}
+
+.theme-green .background {
+    background-color: #3bc264;
+}
+.theme-green .sub-background {
+    background-color: #34ae59;
+}
+.theme-green .badge-background {
+    background-color: #2b9a4d;
+}
+.theme-green .alert-background {
+    background-color: #485563;
+}
+/*.theme-green .item-background {*/
+    /*background-color: white;*/
+/*}*/
+/*.theme-green {*/
+    /*color: #555;*/
+/*}*/
+
+.theme-yellow .background {
+    background-color: #f7e05f;
+}
+
+.theme-purple .background {
+    background-color: #b564b5;
+}
+.theme-purple .sub-background {
+    background-color: #a35aa3;
+}
+.theme-purple .badge-background {
+    background-color: #915091;
+}
+
+.theme-brown .background {
+    background-color: #9b7e61;
+}
+.theme-brown .sub-background {
+    background-color: #8c7258;
+}
+.theme-brown .badge-background {
+    background-color: #7c654e;
+}
+
+
+/* Media Query */
+.optionsBoard:before, .optionsBoard:after {
+    content: " ";
+    display: table
+}
+
+.optionsBoard:after {
+    clear: both;
+}
+
+.optionsBoard {
+    *zoom: 1;
+}
+
+.optionsBoard {
+    margin: 0 0 20px;
+}
+
+@media (min-width: 600px) {
+    .option {
+        width: 45%;
+        margin: 0 10px 10px 0;
+        float: left;
+        max-width: 240px
+    }
+
+    .option:nth-child(2n+1) {
+        clear: both
+    }
+}
+
+@media (min-width: 768px) {
+    .option {
+        width: 270px;
+        max-width: 270px;
+    }
+}
+
+@media (min-width: 991px) {
+    .option:nth-child(2n+1) {
+        clear: both;
+    }
+}
+
+@media (min-width: 992px) {
+    .option:nth-child(2n+1) {
+        clear: none;
+    }
+
+    .option:nth-child(3n+1) {
+        clear: both;
+    }
+}
+
+@media (min-width: 1200px) {
+    .option:nth-child(3n+1) {
+        clear: none;
+    }
+
+    .option:nth-child(4n+1) {
+        clear: both
+    }
+}
+
+@media (min-width: 1600px) {
+    .option:nth-child(4n+1) {
+        clear: none;
+    }
+
+    .option:nth-child(5n+1) {
+        clear: both
+    }
+}
+
+/*@media (min-width: 600px) {*/
+    /*.card {*/
+        /*width: 45%;*/
+        /*margin: 0 10px 10px 0;*/
+        /*float: left;*/
+        /*max-width: 240px*/
+    /*}*/
+
+    /*.card:nth-child(2n+1) {*/
+        /*clear: both*/
+    /*}*/
+/*}*/
+
+/*@media (min-width: 768px) {*/
+    /*.card {*/
+        /*width: 250px;*/
+        /*max-width: 250px*/
+    /*}*/
+
+    /*.card:nth-child(2n+1) {*/
+        /*clear: none*/
+    /*}*/
+/*}*/
+
+/*@media (min-width: 800px) {*/
+    /*.card:nth-child(3n+1) {*/
+        /*clear: both*/
+    /*}*/
+/*}*/
+
+/*@media (min-width: 1150px) {*/
+    /*.card:nth-child(3n+1) {*/
+        /*clear: none*/
+    /*}*/
+
+    /*.card:nth-child(4n+1) {*/
+        /*clear: both*/
+    /*}*/
+/*}*/
+
+/*@media (min-width: 1600px) {*/
+    /*.card:nth-child(4n+1) {*/
+        /*clear: none*/
+    /*}*/
+
+    /*.card:nth-child(5n+1) {*/
+        /*clear: both*/
+    /*}*/
+/*}*/

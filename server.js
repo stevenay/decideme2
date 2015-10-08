@@ -41,11 +41,11 @@ app.use(passport.session());
 app.use(passport.authenticate('remember-me'));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', routes);
+app.use('/test', routes);
 app.use('/api/members', memberRouter(memberModel, rememberMeModel));
 app.use('/api/cards', cardRouter(cardModel));
 app.use('/api/themes', themeRouter(themeModel));
-app.use('/api/options', optionRouter(optionModel));
+app.use('/api/options', optionRouter(optionModel, cardModel));
 
 // passport config
 passport.use(memberModel.createStrategy());

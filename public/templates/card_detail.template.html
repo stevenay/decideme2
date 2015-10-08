@@ -1,4 +1,5 @@
 <!-- Option-New Popup -->
+<span class="theme-<%= theme.themeName %>">
 <div class="modal" id="option-new-modal">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -9,6 +10,7 @@
             <div class="modal-body">
                 <form action="/upload" id="form-add-option" class="form-horizontal dropzone">
                     <fieldset>
+                        <input type="hidden" data-fieldname="id" id="hidden-option-id" placeholder="Option Name">
                         <div class="form-group">
                             <label for="input-question" class="col-lg-2 control-label">Option</label>
                             <div class="col-lg-10">
@@ -18,17 +20,17 @@
                         <div class="form-group">
                             <label for="input-location" class="col-lg-2 control-label">Location</label>
                             <div class="col-lg-10">
-                                <input type="text" class="form-control" data-fieldname="location" id="input-location" placeholder="Location">
+                                <input type="text" id="input-location" class="form-control" data-fieldname="location"  placeholder="Location">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="input-link" class="col-lg-2 control-label">Link</label>
+                            <label for="input-link" class="col-lg-2 control-label">Link (optional)</label>
                             <div class="col-lg-10">
                                 <input type="text" class="form-control" data-fieldname="link" id="input-link" placeholder="Link">
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="input-link" class="col-lg-2 control-label">Link</label>
+                            <label for="input-link" class="col-lg-2 control-label">Expired Date</label>
                             <div class="col-lg-10">
                                 <input type="date" class="form-control" data-fieldname="expiredDate" id="input-link" placeholder="Link">
                             </div>
@@ -37,7 +39,7 @@
                             <label for="input-image" class="col-lg-2 control-label">Image</label>
                             <div class="col-lg-10">
                                 <input name="input-upload-image" id="input-upload-image" type="file" multiple>
-                                <button id="button-upload-image">Upload an Image</button>
+                                <button type="button" id="button-upload-image">Upload an Image</button>
                                 <div id="block-image-holder">
                                     &nbsp;
                                 </div>
@@ -58,55 +60,53 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-12" id="page-header">
         <h1 class="page-title"></h1>
+        <span id="span-cardStatusAlert"></span>
     </div>
 </div>
 <div class="row">
     <div class="col-md-12 card card-big">
-        <a href="#">
-            <div class="panel panel-primary card-content">
-                <div class="panel-body">
-                    <h3 class="card-title"><%= question %></h3>
-                    <small>5 participants</small>
+        <div class="panel panel-primary card-content">
+            <div class="panel-body background">
+                <h3 class="card-title"><%= question %></h3>
+                <small>5 participants</small>
+                &nbsp;
+                <span class="label label-default badge-background">
+                    <span class="glyphicon glyphicon-king"></span>
                     &nbsp;
-                    <span class="label label-default" style="background-color:#2d5294;">
-                        <span class="glyphicon glyphicon-king"></span>
-                        &nbsp;
-                        Arsenal Away Jersey
-                    </span>
-                    &nbsp;
-                    <span class="label label-default" style="background-color:#2d5294;">Still Deciding</span>
-                    <div class="card-buttons pull-right">
-                        <button type="button" id="button-new-option" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="" data-original-title="Add new option">
-                            <span class="glyphicon glyphicon-plus"></span>
-                        </button>
-                        <button type="reset" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="" data-original-title="Settings">
-                            <span class="glyphicon glyphicon-cog"></span>
-                        </button>
-                        <button type="button" id="btn-participants" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="" data-original-title="Participants">
-                            <span class="glyphicon glyphicon-user"></span>
-                        </button>
-                        <!--<button type="submit" class="btn btn-info">Share Link</button>-->
-                    </div>
-                    <div class="clearfix"></div>
+                    Arsenal Away Jersey
+                </span>
+                &nbsp;
+                <span class="label label-default badge-background"><span id="span-cardStatus"><%= status %></span></span>
+                <div class="card-buttons pull-right">
+                    <button type="button" id="button-new-option" class="btn btn-default badge-background" data-toggle="tooltip" data-placement="top" title="" data-original-title="Add new option">
+                        <span class="glyphicon glyphicon-plus"></span>
+                    </button>
+                    <button type="reset" class="btn btn-default badge-background" data-toggle="tooltip" data-placement="top" title="" data-original-title="Settings">
+                        <span class="glyphicon glyphicon-cog"></span>
+                    </button>
+                    <button type="button" id="btn-participants" class="btn btn-default badge-background" data-toggle="tooltip" data-placement="top" title="" data-original-title="Participants">
+                        <span class="glyphicon glyphicon-user"></span>
+                    </button>
+                    <!--<button type="submit" class="btn btn-info">Share Link</button>-->
                 </div>
-
-
                 <div class="clearfix"></div>
-                <!-- style="background-color:#264782;" -->
-                <div class="panel-footer" style="background-color:#264782;">
-                    <p>
-                        <%= description %>
-                    </p>
-                </div>
             </div>
-        </a>
+            <div class="clearfix"></div>
+            <div class="panel-footer sub-background">
+                <p>
+                    <%= description %>
+                </p>
+            </div>
+        </div>
     </div>
 </div>
-<div class="row" id="optionsBoard">
-
+<div class="row">
+    <div class="container optionsBoard" id="optionsBoard">
+    </div>
 </div>
+</span>
 
 <script>
     $(function () {

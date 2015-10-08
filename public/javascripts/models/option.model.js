@@ -1,6 +1,7 @@
 define([
-    'backbone'
-], function (Backbone) {
+    'backbone',
+    'moment'
+], function (Backbone, Moment) {
 
     var Option = Backbone.Model.extend({
         idAttribute: "_id",
@@ -13,12 +14,20 @@ define([
             expiredDate: Date.now(),
             voters: [],
             imageName: '',
-            voted: false
+            status: '',
+            voted: false,
+            alreadySelectedOption: false
         },
 
         attrBlacklist: ['voted'],
 
         urlRoot: '/api/options/',
+
+        parse: function (data) {
+            if (data.expiredDate != null)
+                data.expiredDate = Moment(data.expiredDate).format("YYYY-MM-DD");
+            return data
+        },
 
         readFile: function(file) {
             var reader = new FileReader();
@@ -41,10 +50,11 @@ define([
             attrs || (attrs = _.clone(this.attributes));
 
             if (this.attrBlacklist != null )
-                blackListed =  _.omit(this.attributes, this.attrBlacklist);
+                blackListed =  _.omit(attrs, this.attrBlacklist);
             else
-                blackListed = this.attributes;
+                blackListed = attrs;
 
+            options.contentType = "application/json";
             options.data = JSON.stringify(blackListed);
 
             // Proxy the call to the original save function

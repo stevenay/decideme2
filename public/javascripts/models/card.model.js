@@ -8,7 +8,9 @@ define([
             question: '',
             description: '',
             theme: '',
-            linkUrl: ''
+            linkUrl: '',
+            status: '',
+            selectedOption: null
         },
 
         initialize: function() {

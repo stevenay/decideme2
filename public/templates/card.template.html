@@ -1,9 +1,9 @@
-<a href="#cards/<%= _id %>">
-    <div class="panel panel-primary card-content">
+<a href="#cards/<%= _id %>" class="theme-<%= theme.themeName %>">
+    <div class="panel panel-primary card-content background">
         <div class="panel-body">
             <h4 class="card-title"><%= question %></h4>
             <small><%= participants.length %> Participants</small>
-            <span class="label label-default pull-right" style="background-color:#2d5294;">Decided</span>
+            <span id="span-status" class="label label-default pull-right badge-background"><%= status %></span>
         </div>
     </div>
 </a>

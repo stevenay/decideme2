@@ -9,6 +9,9 @@ define([
         tagName: 'div',
         className: 'col-md-4 col-sm-5 card',
         template: _.template(cardTemplate),
+        initialize: function() {
+            this.listenTo(this.model, "change:status", this.setCardStatus);
+        },
         events: {
             'click .delete': 'deleteBook'
         },
@@ -16,6 +19,9 @@ define([
         render: function () {
             this.$el.html( this.template( this.model.toJSON() ) );
             return this;
+        },
+        setCardStatus: function (card, changedStatus) {
+            this.$('#span-status').html(changedStatus);
         }
     });
 

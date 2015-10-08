@@ -16,7 +16,7 @@ var routes = function(cardModel) {
             description: req.body.description,
             theme: req.body.theme,
             owner: req.user._id,
-            status: 'created',
+            status: 'preparing',
             linkUrl: 'auto generate from the Server'
         });
 
@@ -24,8 +24,35 @@ var routes = function(cardModel) {
 
         card.save(function(err, savedCard) {
             if (err) { console.log(err); res.status(500).send("Cannot save card"); }
-            return res.status(200).send(savedCard._id);
+
+            savedCard.populate({ path: 'theme', select: 'themeName'}, function(err, populatedCard) {
+                console.log(populatedCard);
+                return res.status(200).send(populatedCard);
+            });
+
         });
+    });
+
+    // middleware for Retrieving Card Object
+    cardRouter.use('/:cardId', function(req, res, next) {
+        Card.findById(req.params.cardId)
+            .exec( function(err, card) {
+                if (err) {
+                    res.status(500).send(err);
+                } else if (card) {
+                    req.card = card;
+                    next();
+                } else {
+                    res.status(404).send("no card found");
+                }
+            });
+    });
+    cardRouter.get('/:cardId', utils.ensureAuthenticated, funtion(req, res) {
+        req.card
+            .populate('theme', 'themeName')
+            .exec(function(err) {
+                res.status(200).json(req.card);
+            });
     });
 
     // Get All Cards
@@ -34,7 +61,7 @@ var routes = function(cardModel) {
         cardModel.find({
                 owner: req.user._id
             })
-            .populate('participants')
+            .populate('theme', 'themeName')
             .sort({created_at: 'ascending'})
             .exec( function(err, cards) {
                 if (err) {
@@ -46,20 +73,6 @@ var routes = function(cardModel) {
                     res.status(404).send("not found cards");
                 }
             });
-    });
-
-    // middleware for Retrieving Card Object
-    cardRouter.use('/:cardId', function(req, res, next) {
-        Card.findById(req.params.cardId, function(err, card) {
-            if (err) {
-                res.status(500).send(err);
-            } else if (card) {
-                req.card = card;
-                next();
-            } else {
-                res.status(404).send("no card found");
-            }
-        });
     });
 
     // Update card info

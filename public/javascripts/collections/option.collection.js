@@ -9,7 +9,13 @@ define([
 
         initialize: function(models, options) {},
 
-        url: '/api/options/'
+        url: '/api/options/',
+
+        setModelAttribute: function(attributes) {
+            this.invoke('set', attributes);
+            // NOTE: This would need to get a little more complex to support the
+            //       set(key, value) syntax
+        }
 
     });
 

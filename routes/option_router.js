@@ -8,12 +8,14 @@ var path = require('path');
 var storage = multer.diskStorage({
     destination: __dirname + '/../public/images/options/',
     filename: function (req, file, cb) {
-        console.log(file.originalname);
-        crypto.pseudoRandomBytes(16, function (err, raw) {
-            if (err) return cb(err);
+        if (file) {
+            console.log(file.originalname);
+            crypto.pseudoRandomBytes(16, function (err, raw) {
+                if (err) return cb(err);
 
-            cb(null, raw.toString('hex') + path.extname(file.originalname))
-        })
+                cb(null, raw.toString('hex') + path.extname(file.originalname))
+            });
+        }
     }
 });
 var upload = multer({
@@ -21,56 +23,105 @@ var upload = multer({
     limits: {fileSize: 1000000, files:1}
 });
 
-var routes = function(optionModel) {
+var routes = function(optionModel, cardModel) {
     var optionRouter = express.Router();
     var utils = require('../utils');
 
     // Register new option
     optionRouter.post('/', utils.ensureAuthenticated, upload.single('file'), function(req, res) {
+        var imageName = (req.file) ? req.file.filename : "";
+
         var option = new optionModel({
             name: req.body.name,
             location: req.body.location,
             link: req.body.link,
-            imageName: req.file.filename,
+            imageName: imageName,
             expiredDate: req.body.expiredDate,
             card: req.body.cardId
         });
 
         option.save(function(err, savedOption) {
-            if (err) { console.log(err); res.status(500).send("Cannot save option!"); }
-            res.json(savedOption);
-        });
+            if (err) { res.status(500).send("Cannot save option!"); }
+
+            optionModel.count({ card : savedOption.card })
+                .exec( function(err, count) {
+                    var returnData = savedOption.toJSON();
+                    if (count > 1) {
+                        // Also save to the card
+                        cardModel.update({ _id: savedOption.card }, { status: "ready" }, {}, function(err) {
+                            if (err) { res.status(500).send("Cannot update card status!"); }
+                            returnData['cardStatus'] = "ready";
+                            res.json(returnData);
+                        });
+                    };
+                });
+            });
     });
 
     // Update option
     optionRouter.patch('/vote/:optionId', utils.ensureAuthenticated, getOptionModel, function (req, res) {
-
         var updateClause, voteCounted;
         var indexOfMember = req.option.voters.indexOf(req.user._id);
         var vote;
         voteCounted = (req.option.voteCount) ? req.option.voteCount : 0;
 
-        if ( indexOfMember > -1  ) {
+        if ( indexOfMember > -1 ) {
             vote = false;
-            updateClause = {$pull: {voters: req.user._id}, voteCount: --voteCounted};
+            updateClause = { $pull: {voters: req.user._id}, voteCount: --voteCounted};
         }
         else {
             vote = true;
             updateClause = { $addToSet: { voters: req.user._id}, voteCount: ++voteCounted };
         }
 
-        optionModel.findByIdAndUpdate(req.params.optionId, updateClause, function(err, option) {
+        optionModel.findByIdAndUpdate(req.params.optionId, updateClause, function(err, updatedOption) {
             if (err) {
                 console.log(err);
                 res.status(500).send(err);
             } else {
-                res.json({ voteCount: voteCounted, voted: vote });
+                cardModel.update({ _id: updatedOption.card }, { status: "processing" }, {}, function(err) {
+                    if (err) { res.status(500).send(err); }
+                    res.json({ voteCount: voteCounted, voted: vote });
+                });
             }
         });
     });
 
-    optionRouter.put('/:optionId', utils.ensureAuthenticated, getOptionModel, function (req, res) {
-        req.option.voteCount = req.body.voteCount;
+    optionRouter.patch('/:optionId', utils.ensureAuthenticated, getOptionModel, function (req, res) {
+        req.option.populate('card', function(err) {
+            var selectedOptionId = null;
+            if (req.option.card.status == "processing") {
+                if (req.body.status === 'selected' &&
+                    req.option.card.selectedOption != null &&
+                    req.option.card.selectedOption !== '')
+                        res.status(403).send("The card already has a selected option.");
+
+                req.option.status = req.body.status;
+                selectedOptionId = (req.body.status === '') ? null : req.option._id;
+                req.option.card.set('selectedOption', selectedOptionId);
+            } else {
+                res.status(403).send("To make the option winner, the card should be in processing state.");
+            }
+
+            req.option.card.save(function(err) {
+                req.option.save(function(err, savedOption) {
+                    if (err) {
+                        res.status(500).send(err);
+                    } else {
+                        res.json({ status: savedOption.status, selectedOption: selectedOptionId});
+                    }
+                });
+            });
+        });
+
+    });
+
+    optionRouter.put('/:optionId', utils.ensureAuthenticated, upload.single('file'), getOptionModel, function (req, res) {
+        req.option.name = req.body.name;
+        req.option.location = req.body.location;
+        req.option.link = req.body.link;
+        req.option.expiredDate = req.body.expiredDate;
+        req.option.imageName = (req.file) ? req.file.filename : req.option.imagename;
 
         req.option.save(function(err) {
             if (err) {

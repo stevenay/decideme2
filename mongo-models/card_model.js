@@ -11,6 +11,7 @@ var Card = new Schema({
     linkUrl: String,
     status: { type: String, default: 'processing' },
     participants: [{ type:Schema.Types.ObjectId, ref: 'members' }],
+    selectedOption: { type:Schema.Types.ObjectId, ref: 'options' },
     created_at: { type: Date },
     updated_at: { type: Date }
 });

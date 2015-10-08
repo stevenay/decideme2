@@ -1,11 +1,17 @@
+// App Id
+// AIzaSyA0_gygQCs6t9W_K_yFbOs2MuphsPYEqfw
 require.config({
+    waitSeconds : 120, //make sure it is enough to load all gmaps scripts
     paths: {
         jquery: 'libs/jquery-2.1.4.min',
         backbone: 'libs/backbone-min',
         underscore: 'libs/underscore-min',
         templates: '../templates',
         cookie: 'libs/js.cookie',
-        magnific_popup: 'libs/magnific-popup.min'
+        magnific_popup: 'libs/magnific-popup.min',
+        async: 'libs/async',
+        eventbus: 'eventbus',
+        moment: 'libs/moment'
     },
     shim: {
         'libs/underscore/underscore': {

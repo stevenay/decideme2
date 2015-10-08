@@ -19,8 +19,6 @@ define([
 
             this.listenTo( this.collection, 'add', this.renderCard );
             this.listenTo( this.collection, 'reset', this.render );
-
-            this.listenTo( this.themeCollection, 'reset', this.renderThemes );
             //this.themeCollection.on("change:selected", this.themeSelected , this);
 
             this.childViews = [];
@@ -52,6 +50,8 @@ define([
             this.$el.html(memberBoardTemplate);
             this.renderAllCards();
 
+            this.listenTo( this.themeCollection, 'reset', this.renderThemes );
+
             //this.$newCardModal = this.$('#modal-new-card');
             this.$modal = this.$('#modal-new-card');
             this.$form = this.$modal.find('form');
@@ -63,7 +63,6 @@ define([
                     obj.close();
                 }, this);
             }
-
             this.childViews.length = 0;
         },
 
@@ -74,7 +73,6 @@ define([
                 this.renderCard(card);
             }, this );
         },
-
         renderCard: function(card) {
             var cardView = new CardView({ model: card });
             this.$el.find('#cardBoard div.card-new').after( cardView.render().el );
@@ -87,8 +85,17 @@ define([
             this.themeCollection.each( function (theme) {
                 this.renderTheme(theme);
             }, this);
-        },
 
+            this.$('#modal-new-card div.colors').children('div').each(function (i, el) {
+                var element = $(el);
+                if (i === 0)
+                    element.addClass('active');
+                element.on('click', function () {
+                    element.addClass('active');
+                    element.siblings().removeClass('active');
+                });
+            });
+        },
         renderTheme: function(theme) {
             var themeId = theme.get('_id');
             var themeName = theme.get('themeName');
